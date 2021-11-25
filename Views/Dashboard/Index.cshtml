@@ -1,0 +1,86 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+<div class="row no-gutters">
+    <div class="col-md-8">
+        <div class="col-md-12">
+            <div class="card card-shadow">
+                <div class="card-header">
+                    <strong>Our Sales</strong>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-12">
+                        <div id="salesChart" style="width:100%;height:300px;">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card card-shadow">
+                <div class="card-header text-center">
+                    <strong>To Do</strong>
+                </div>
+                <div class="card-body text-center">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="round round-md grey">
+                                <span>0</span>
+                            </div>
+                            <div>
+                                New
+                            </div>
+                            <div>
+                                <span class="fa fa-chevron-down"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="round round-md grey">
+                                <span>0</span>
+                            </div>
+                            <div>
+                                Pending
+                            </div>
+                            <div>
+                                <span class="fa fa-chevron-down"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="round round-md grey">
+                                <span>0</span>
+                            </div>
+                            <div>
+                                Completed
+                            </div>
+                            <div>
+                                <span class="fa fa-chevron-down"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="col-md-12">
+            <div class="card card-shadow" style="width:100%;min-height:390px;">
+                <div class="card-header text-center">
+                    <strong>All Activity</strong>
+                </div>
+                <div class="card-body">
+                    <div id="activitygroup" class="list-group">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/echarts.min.js"></script>
+    <script src="~/js/dashboard.js"></script>
+}

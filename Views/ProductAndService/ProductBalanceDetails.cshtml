@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Anastock.ViewModel.ProductBalanceDetailsViewModel>
+
+@{
+    ViewData["Title"] = "Stock Balance Flow";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>@ViewBag.ProductName</strong>
+                <a asp-action="ProductBalance" class="btn btn-sm btn-primary float-right">
+                    <i class="fa fa-backspace"></i> Back
+                </a>
+            </div>
+            <div class="card-body">
+
+
+                <table id="tbProd" class="tbQuote table table-responsive-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CreatedDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Qty)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Description)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Qty)
+                                </td>
+                                <th>
+                                    @Html.DisplayFor(model => item.Description)
+                                </th>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var table = $('#tbProd');
+
+        $(document).ready(function () {
+            table = table.DataTable({
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false,
+                }]
+            });
+        });
+
+    </script>
+}

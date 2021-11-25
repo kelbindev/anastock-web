@@ -1,0 +1,131 @@
+﻿@model Anastock.Models.Claim
+@{
+    ViewData["Title"] = "New Claim";
+}
+<h3 class="text-muted">Create Claim</h3>
+<hr />
+<form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group row">
+                <label asp-for="ExpenseDateFrom" class="col-lg-4 col-sm-4 control-label "></label>
+                <div class="col-lg-8">
+                    <input asp-for="ExpenseDateFrom" id="expenseDateFrom" class="form-control" />
+                    <span asp-validation-for="ExpenseDateFrom"></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group row">
+                <label asp-for="ExpenseDateTo" class="col-lg-4 col-sm-4 control-label"></label>
+                <div class="col-lg-8">
+                    <input asp-for="ExpenseDateTo" id="expenseDateTo" class="form-control" />
+                    <span asp-validation-for="ExpenseDateTo"></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group row">
+                <div class="input-group" id="expenseType">
+                    <label asp-for="ExpenseType" class="col-md-4 col-form-label text-muted"></label>
+                    <div class="col-md-8">
+                        <select id="expenseType" asp-for="ExpenseType" class="form-control">
+                            <option label="Entertainment" value="1">Entertainment</option>
+                            <option label="Meal" value="Days">Meal</option>
+                            <option label="Medical" value="Prepaid">Medical</option>
+                            <option label="Miscellaneous" value="COD">Miscellaneous</option>
+                            <option label="Overtime" value="COD">Overtime</option>
+                            <option label="Transport" value="COD">Transport</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group row">
+                <label asp-for="SubTotal" class="col-lg-4 col-sm-4 control-label"></label>
+                <div class="col-lg-8">
+                    <input asp-for="SubTotal" id="subTotal" type="number" class="form-control" />
+                    <span asp-validation-for="SubTotal"></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group row">
+                <label asp-for="Tax" class="col-lg-4 col-sm-4 control-label"></label>
+                <div class="col-lg-8">
+                    <input asp-for="Tax" id="tax" type="number" class="form-control" />
+                    <span asp-validation-for="Tax"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group row">
+                <label asp-for="Total" class="col-lg-4 col-sm-4 control-label"></label>
+                <div class="col-lg-8">
+                    <input asp-for="Total" id="total" type="number" class="form-control" />
+                    <span asp-validation-for="Total"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="form-group row">
+                <label asp-for="Remarks" id="remarks" class="col-lg-2 col-sm-2 control-label" for="Remarks">Remarks</label>
+                <div class="col-lg-10">
+                    <textarea asp-for="Remarks" id="remarks" maxlength="250" rows="5" class="form-control" name="Remarks"></textarea>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group row">
+                <label class="col-lg-4 col-sm-4 control-label">Attachment</label>
+                <div class="col-lg-8">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="attc">
+                        <label class="custom-file-label" for="attc">Choose file</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div style="padding:10px 0;" class="float-right">
+                <input id="cancel" type="button" value="Cancel" class="btn btn-outline-dark btn-sm" style="width:70px;" />
+                <input id="submit" type="button" value="Save" class="btn btn-success btn-sm" style="min-width:70px;" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="~/js/claim.js" asp-append-version="true"></script>
+}
+<style>
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 90%;
+    }
+
+    tr.error {
+        background-color: rgba(255,0,0,0.35);
+    }
+</style>

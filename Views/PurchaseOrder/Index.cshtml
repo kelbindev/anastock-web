@@ -1,0 +1,172 @@
+﻿@model IEnumerable<Anastock.Models.PurchaseOrder>
+
+@{
+    ViewData["Title"] = "Purchase Order";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Purchase Order</strong>
+            </div>
+            <div class="card-body">
+
+                <a class="btn btn-sm btn-primary float-right" asp-action="New">Create Purchase Order</a>
+                <br />
+                <br />
+
+
+                <table id="tbPurchaseOrder" class="tbPurchaseOrder table table-responsive-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PurchaseOrderNo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.VendorInvoiceNo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IssueDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DueDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Total)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PurchaseOrderNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.VendorInvoiceNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IssueDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DueDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Total)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="fa fa-sm fa-ellipsis-v"></span>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a asp-controller="PurchaseOrder" asp-action="Edit" asp-route-id="@item.Id" class="dropdown-item text-muted"><span class='fa fa-edit'></span> Edit</a>
+                                            <a asp-controller="PurchaseOrder" asp-action="GeneratePdf" asp-route-id="@item.Id" class="dropdown-item text-muted"><span class='fa fa-file-pdf'></span> Generate Pdf</a>
+                                            @if (item.Status != "Cancelled")
+                                            {
+                                                <a asp-controller="Bill" asp-action="New" asp-route-id="@item.Id" class="dropdown-item text-muted"><span class="fa fa-receipt"></span> Convert to Bill</a>
+                                            }
+                                            @if (item.Status == "Open")
+                                            {
+                                                <button type="button" class="dropdown-item text-danger"
+                                                        onclick="javascript: confirmCancel('@item.Id', '@item.PurchaseOrderNo')">
+                                                    <span class="fa fa-ban"></span> Cancel PO
+                                                </button>
+                                            }
+                                            <button type="button" class="dropdown-item text-danger"
+                                                    onclick="javascript: confirmDelete('@item.Id', '@item.PurchaseOrderNo')">
+                                                <span class='fa fa-trash-alt'></span> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var table = $('#tbPurchaseOrder');
+
+        $(document).ready(function () {
+            table = table.DataTable({
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false,
+                }]
+            });
+        });
+
+        function confirmDelete(poId, poNo) {
+            var url = "/PurchaseOrder/delete";
+
+            bootbox.confirm({
+                size: "large",
+                message: "Delete PO [" + poNo + "]?",
+                callback: function (result) { /* result is a boolean; true = OK, false = Cancel*/
+                    if (result) {
+                        deletePO(url, poId);
+                    }
+                }
+            })
+        }
+
+        function deletePO(url, poId) {
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: { id: poId },
+                success: function (data) {
+                    bootbox.alert(data.message, function () {
+                        location.reload();
+                    });
+                }
+            });
+
+            return false;
+        }
+
+        function confirmCancel(poId, poNo) {
+            var url = "/PurchaseOrder/cancelPO";
+
+            bootbox.confirm({
+                size: "large",
+                message: "Cancel Purchase Order [" + poNo + "]?",
+                callback: function (result) { /* result is a boolean; true = OK, false = Cancel*/
+                    if (result) {
+                        cancelPO(url, poId);
+                    }
+                }
+            })
+        }
+
+        function cancelPO(url, poId) {
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: { id: poId },
+                success: function (data) {
+                    bootbox.alert(data.message, function () {
+                        location.reload();
+                    });
+                }
+            });
+
+            return false;
+        }
+    </script>
+}

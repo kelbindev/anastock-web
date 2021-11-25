@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Reports";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Reports</strong>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="pill" href="#sales" role="tab" aria-controls="pills-sales" aria-selected="true">Sales Report</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="pill" href="#itemsales" role="tab" aria-controls="pills-itemsales" aria-selected="true">Item Sales Report</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="pill" href="#gst" role="tab" aria-controls="pills-gst" aria-selected="false">GST Report</a>
+                    </li>
+                </ul>
+                <div class="tab-content mt-3">
+                    <div class="tab-pane fade show active" id="sales" role="tabpanel" aria-labelledby="sales-tab">
+                        @Html.Partial("Sales/_SalesReport.cshtml")
+                    </div>
+                    <div class="tab-pane fade" id="itemsales" role="tabpanel" aria-labelledby="itemsales-tab">
+                        @Html.Partial("Sales/_ItemSalesReport.cshtml", new ItemSalesReportViewModel())
+                    </div>
+                    <div class="tab-pane fade" id="gst" role="tabpanel" aria-labelledby="gst-tab">
+                        @Html.Partial("_GSTReport.cshtml", new GSTReportViewModel())
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    input, label {
+        display: block;
+    }
+</style>
+
+
+@section Scripts {
+    <script src="~/js/report.js"></script>
+    <script src="~/js/echarts.min.js"></script>
+    
+    <script>
+        var tableSales = $('#tbSales');
+        var tableSalesDetails = $('#tbSalesDetails');
+
+        var startOfMonth = moment().clone().startOf('month').format('DD/MM/YYYY');
+        var endOfMonth = moment().clone().endOf('month').format('DD/MM/YYYY');
+
+        var currentYear = moment().clone().startOf('month').format('YYYY');
+
+        tableSales = $("#tbSales").DataTable();
+        tableSalesDetails = $("#tbSalesDetails").DataTable({
+            dom: 't'
+        });
+
+
+        $(document).ready(function () {
+            $('.datepick').datetimepicker({
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date(),
+            });
+
+            $('.datepickYearly').datetimepicker({
+                format: 'YYYY',
+                defaultDate: new Date(),
+            });
+
+            $('.dateFrom').val(startOfMonth);
+            $('.dateTo').val(endOfMonth);
+
+            $('.datepickYearly').val(currentYear);
+
+            loadSalesDetails();
+            //LoadSalesChart();
+        });
+    </script>
+}

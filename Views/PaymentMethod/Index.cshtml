@@ -1,0 +1,180 @@
+﻿@model IEnumerable<PaymentMethod>
+
+@{
+    ViewBag.Title = "Payment Method";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Payment Method</strong>
+            </div>
+            <div class="card-body">
+                <a asp-action="Create" class="btn btn-sm btn-primary m-1 popup float-right" data-toggle="modal" data-target="#modalCreateEditPM" id="btnNewPM">
+                    <i class="fa fa-plus"></i> New
+                </a>
+                <table id="dtPM" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Account Number</th>
+                            <th class="no-sort">Action</th>
+                        </tr>
+                    </thead>
+                    @foreach (var ps in Model)
+                    {
+                        <tr>
+                            <td>@ps.Description</td>
+                            <td>@ps.AccountNumber</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="fa fa-sm fa-ellipsis-v"></span>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a asp-action="Edit" asp-route-pmId="@ps.PaymentMethodId" class="dropdown-item text-muted m-1 popup" data-toggle="modal" data-target="#modalCreateEditPM" id="btnEditPM">
+                                            <span class='fa fa-edit'></span> Edit
+                                        </a>
+                                        <button type="button" class="dropdown-item text-muted m-1" data-toggle="modal" data-target="modal_@ps.PaymentMethodId"
+                                                id="btnDeletePopUp" onclick="javascript: modalDelete('@ps.PaymentMethodId', '@ps.Description');">
+                                            <span class='fa fa-trash-alt'></span> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                                
+
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@*CREATE EDIT MODAL*@
+<div aria-hidden="true" role="dialog" tabindex="-1" id="modalCreateEditPM" class="modal fade">
+    <div class="modal-dialog modal-lg" role="document" id="modalDialogPM">
+
+    </div>
+</div>
+
+@*DELETE MODAL*@
+<div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form enctype="multipart/form-data" asp-controller="PaymentMethod" asp-action="Delete" method="post" class="mt-3"
+                  id="formCreatePM" name="formCreatePM" onsubmit="SubmitFormDelete(this); return false;">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+                </div>
+                <input type="hidden" id="hdfPMId" />
+                <div class="modal-body">
+                    <p id="lblDelete"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button id="btnDelete" type="submit" class="btn btn-danger mr-1">Delete</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script>
+        var table = $('#dtPM');
+
+        $(document).ready(function () {
+            table = $('#dtPM').DataTable({
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false,
+                }]
+            });
+        });
+
+        $(".popup").click(function (e) {
+            var url = $(this).attr('href');;
+            modalCreateEdit(url);
+        });
+
+        function modalCreateEdit(url) {
+            $('#hdfPMId').val('0');
+            $.get(url).done(function (data) {
+                debugger;
+                $.validator.unobtrusive.parse('#modalCreateEditPM');
+                $('#modalCreateEditPM').find(".modal-dialog").html(data);
+                $('#modalCreateEditPM > .modal', data).modal("show");
+            });
+        };
+
+        function modalDelete(pmId, pmName) {
+            $('#hdfPMId').val(pmId);
+            bootbox.confirm({
+                size: "large",
+                message: "Delete Payment Method [" + pmName + "]?",
+                callback: function (result) { /* result is a boolean; true = OK, false = Cancel*/
+                    if (result) {
+                        var pmId = $('#hdfPMId').val();
+                        var url = "/PaymentMethod/Delete";
+
+                        SubmitFormDelete(url, pmId);
+                    }
+                }
+            })
+        };
+
+        function SubmitFormCreateEdit(form) {
+            var isValid = true;
+            var desc = $('#tbDescription');
+            var acc = $('#tbAccountNumber');
+            if (desc.val().trim() == '') {
+                desc.siblings('span').css('display', 'inline-block');
+                isValid = false;
+            }
+            else {
+                desc.siblings('span').css('display', 'none');
+            }
+
+            if (isValid) {
+                var url = form.action;
+                console.log($(form).serialize());
+                $.ajax({
+                    url: url,
+                    type: 'post',
+                    data: $(form).serialize(),
+                    success: function (data) {
+                        $('#modalCreateEditPM').modal("hide");
+                        bootbox.alert(data.message, function () {
+                            location.reload();
+                        });
+                    }
+                });
+            }
+            return false;
+        };
+
+        function SubmitFormDelete(url, pmId) {
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: { id: pmId },
+                success: function (data) {
+                    bootbox.alert(data.message, function () {
+                        location.reload();
+                    });
+                }
+            });
+
+            return false;
+        };
+    </script>
+}

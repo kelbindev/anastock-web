@@ -1,0 +1,197 @@
+﻿@model Anastock.Models.Project
+@{
+    ViewData["Title"] = "Edit";
+}
+<div class="modal-content" id="modalContent">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Edit Project</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        @if (Model.InUse)
+                        {
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label asp-for="Title" class="col-md-2 col-form-label text-muted"></label>
+                                    <input id="title" asp-for="Title" class="col-md-10 form-control" disabled="disabled" />
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label asp-for="Title" class="col-md-2 col-form-label text-muted"></label>
+                                    <input id="title" asp-for="Title" class="col-md-10 form-control" />
+                                    <span asp-validation-for="Title" class="error text-danger offset-md-2 offset-lg-2 offset-sm-0">* Title required</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="row">
+                        @if (Model.InUse == true)
+                        {
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    @Html.Hidden("projectid", @Model.ProjectId)
+                                    <label asp-for="Customer" class="col-md-4 col-form-label text-left text-muted"></label>
+                                    @Html.DropDownListFor(m => m.CustomerId,
+                                                 new SelectList(ViewBag.ListofCustomer, "CustomerId", "CustomerName"), new { @class = "customer form-control col-md-8 projectCustomer", id = "customer", @disabled = "disabled" })
+                                </div>
+                                <div class="form-group row">
+                                    <div class="input-group date" id="installationDate">
+                                        <label asp-for="InstallationDate" class="col-md-4 col-form-label text-muted"></label>
+                                        <input id="installationdate" asp-for="InstallationDate" style="width:100%;" class="installationdate col-md-8 form-control" disabled="disabled" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label asp-for="ProjectBudget" class="col-md-4 col-form-label text-muted"></label>
+                                    <input asp-for="ProjectBudget" id="projectbudget" class="projectbudget col-md-8 form-control" disabled="disabled" />
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    @Html.Hidden("projectid", @Model.ProjectId)
+                                    <label asp-for="Customer" class="col-md-4 col-form-label text-left text-muted"></label>
+                                    @Html.DropDownListFor(m => m.CustomerId,
+                                                 new SelectList(ViewBag.ListofCustomer, "CustomerId", "CustomerName"), new { @class = "customer form-control col-md-8  projectCustomer", @disabled = "disabled", id = "customer" })
+                                    <span asp-validation-for="Customer" class="error text-danger offset-md-4 offset-lg-4 offset-sm-0">* Customer required</span>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="input-group date" id="installationDate">
+                                        <label asp-for="InstallationDate" class="col-md-4 col-form-label text-muted"></label>
+                                        <input id="installationdate" asp-for="InstallationDate" style="width:100%;" class="installationdate col-md-8 form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                        <span asp-validation-for="InstallationDate" class="error text-danger offset-md-4 offset-lg-4 offset-sm-0">* Installation date required</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label asp-for="ProjectBudget" class="col-md-4 col-form-label text-muted"></label>
+                                    <input asp-for="ProjectBudget" id="projectbudget" class="projectbudget col-md-8 form-control" />
+                                    <span class="error text-danger offset-md-4 offset-lg-4 offset-sm-0">* Project budget required</span>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.InUse)
+                        {
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label asp-for="ProjectNo" class="col-md-4 col-form-label text-muted"></label>
+                                    <input asp-for="ProjectNo" id="projectno" class="col-md-8 form-control" placeholder="0000001" disabled="disabled" />
+                                </div>
+                                <div class="form-group row">
+                                    <div class="input-group date" id="handoverDate">
+                                        <label asp-for="HandoverDate" class="col-md-4 col-form-label text-muted"></label>
+                                        <input id="handoverdate" asp-for="HandoverDate" style="width:100%;" class="handoverdate col-md-8 form-control" disabled="disabled" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="input-group date" id="handoverDate">
+                                        <label asp-for="DismantleDate" class="col-md-4 col-form-label text-muted"></label>
+                                        <input id="dismantledate" asp-for="DismantleDate" style="width:100%;" class="dismantledate col-md-8 form-control" disabled="disabled" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label asp-for="ProjectNo" class="col-md-4 col-form-label text-muted"></label>
+                                    <input asp-for="ProjectNo" id="projectno" class="col-md-8 form-control" placeholder="0000001" />
+                                    <span class="error text-danger offset-md-4 offset-lg-4 offset-sm-0">* Project number required</span>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="input-group date" id="handoverDate">
+                                        <label asp-for="HandoverDate" class="col-md-4 col-form-label text-muted"></label>
+                                        <input id="handoverdate" asp-for="HandoverDate" style="width:100%;" class="handoverdate col-md-8 form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                        <span asp-validation-for="HandoverDate" class="error text-danger offset-md-4 offset-lg-4 offset-sm-0">* Handover date required</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="input-group date" id="handoverDate">
+                                        <label asp-for="DismantleDate" class="col-md-4 col-form-label text-muted"></label>
+                                        <input id="dismantledate" asp-for="DismantleDate" style="width:100%;" class="dismantledate col-md-8 form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                        <span asp-validation-for="DismantleDate" class="error text-danger offset-md-4 offset-lg-4 offset-sm-0">* Dismantle date required</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+                    </div>
+                    <div class="row">
+                        @if (Model.InUse)
+                        {
+                            <div class="col-md-12 row">
+                                <label asp-for="Remarks" class="col-md-2 col-form-label text-muted"></label>
+                                <textarea id="remarks" asp-for="Remarks" maxlength="250" rows="5" class="form-control col-md-10" disabled="disabled"></textarea>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-12 row">
+                                <label asp-for="Remarks" class="col-md-2 col-form-label text-muted"></label>
+                                <textarea id="remarks" asp-for="Remarks" maxlength="250" rows="5" class="form-control col-md-10"></textarea>
+                            </div>
+                        }
+                    </div>
+                    <div class="row">
+                        @if (Model.InUse)
+                        {
+
+                        }
+                        else
+                        {
+                            <div class="col-md-12">
+                                <div style="padding:10px 0;" class="float-right">
+                                    @*<input id="cancel" type="button" value="Cancel" class="btn btn-outline-dark btn-sm" style="width:70px;" />*@
+                                    <a id="cancelProject" data-dismiss="modal" onclick="hideModalProject()" value="Cancel" class="btn btn-outline-dark btn-sm" style="width:70px;">Cancel</a>
+                                    <input id="updateProject" type="button" value="Save" class="btn btn-success btn-sm" style="min-width:70px;" onclick="updateProject()"/>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*@section Scripts {
+    <script src="~/js/project.js"></script>
+}
+<style>
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 90%;
+    }
+
+    tr.error {
+        background-color: rgba(255,0,0,0.35);
+    }
+</style>*@

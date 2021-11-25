@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="02/22/2021 21:12:53" ReportInfo.Modified="02/23/2021 08:35:22" ReportInfo.CreatorVersion="2021.1.16.0">
+  <ScriptText>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Data;
+using FastReport;
+using FastReport.Data;
+using FastReport.Dialog;
+using FastReport.Barcode;
+using FastReport.Table;
+using FastReport.Utils;
+
+namespace FastReport
+{
+  public class ReportScript
+  {
+
+    private void Page1_StartPage(object sender, EventArgs e)
+    {
+      
+    }
+  }
+}
+</ScriptText>
+  <Styles Name="Standard">
+    <Style Name="Title" Font="Arial, 12pt, style=Bold"/>
+    <Style Name="Header" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Group" Font="Arial, 10pt, style=Bold"/>
+    <Style Name="Data" Font="Arial, 10pt"/>
+    <Style Name="Footer" Font="Arial, 10pt"/>
+    <Style Name="EvenRows" Fill.Color="WhiteSmoke" Font="Arial, 10pt"/>
+  </Styles>
+  <Dictionary>
+    <MsSqlDataConnection Name="AnastockDatabase" ConnectionString="rijcmlqAFHGp6KQj27H4qUwAIR20hSnyrpNtgmeY+I5zyTmYE0HuZfX1hs9fAqnt4DRtzHm0lx1VahQ7y62CpId+5L7TSgKvO/z2OK2LNUpQ3s4fNjBFB9hBhSDQSuVqyoEWOj+JA3fgqHaXh9yrGuwrjla0e780bEMGhLBCoC9P2Bdqtkhup7KSKmRgoCiMkZAUw83J2FIXyFzFjIx52hP2JtNTg==">
+      <TableDataSource Name="Table" Alias="Quote" DataType="System.Int32" Enabled="true" SelectCommand="SELECT q.*, c.Name AS CompanyName, c.GST, cc.CustomerName, ca.BillingAddress, ca.BillingContactPerson, ca.BillingCountry, ca.BillingPostalCode, ca.BillingState, ca.BillingTown, ca.BillingContactPhone1 FROM Quotes q INNER JOIN Company c ON q.CompanyId = c.CompanyId INNER JOIN Customers cc ON q.CustomerId = cc.CustomerId INNER JOIN CustomerAddresses ca ON q.CustomerAddressId = ca.CustomerAddressId WHERE q.QuoteId = @qi">
+        <Column Name="QuoteId" DataType="System.Guid"/>
+        <Column Name="QuoteNo" DataType="System.String"/>
+        <Column Name="CustomerPONo" DataType="System.String"/>
+        <Column Name="IssueDate" DataType="System.DateTime"/>
+        <Column Name="ExpiryDate" DataType="System.DateTime"/>
+        <Column Name="Status" DataType="System.String"/>
+        <Column Name="TaxInclusive" DataType="System.Boolean" BindableControl="CheckBox"/>
+        <Column Name="CustomerNotes" DataType="System.String"/>
+        <Column Name="SubTotal" DataType="System.Decimal"/>
+        <Column Name="Tax" DataType="System.Decimal"/>
+        <Column Name="DiscountNote" DataType="System.String"/>
+        <Column Name="DiscountPercent" DataType="System.Decimal"/>
+        <Column Name="Total" DataType="System.Decimal"/>
+        <Column Name="RevisionNo" DataType="System.Int32"/>
+        <Column Name="CreditTerm" DataType="System.String"/>
+        <Column Name="ShippingTerm" DataType="System.String"/>
+        <Column Name="DeliveryTerm" DataType="System.String"/>
+        <Column Name="PaymentTerm" DataType="System.String"/>
+        <Column Name="isCurrentUse" DataType="System.Boolean" BindableControl="CheckBox"/>
+        <Column Name="CustomerId" DataType="System.Guid"/>
+        <Column Name="CustomerAddressId" DataType="System.Int32"/>
+        <Column Name="CreatedBy" DataType="System.String"/>
+        <Column Name="CreatedDate" DataType="System.DateTime"/>
+        <Column Name="UpdatedBy" DataType="System.String"/>
+        <Column Name="UpdatedDate" DataType="System.DateTime"/>
+        <Column Name="IsDeleted" DataType="System.Boolean" BindableControl="CheckBox"/>
+        <Column Name="CompanyId" DataType="System.Int32"/>
+        <Column Name="LinkedProjectId" DataType="System.Guid"/>
+        <Column Name="CompanyName" DataType="System.String"/>
+        <Column Name="GST" DataType="System.Decimal"/>
+        <Column Name="CustomerName" DataType="System.String"/>
+        <Column Name="BillingAddress" DataType="System.String"/>
+        <Column Name="BillingContactPerson" DataType="System.String"/>
+        <Column Name="BillingCountry" DataType="System.String"/>
+        <Column Name="BillingPostalCode" DataType="System.String"/>
+        <Column Name="BillingState" DataType="System.String"/>
+        <Column Name="BillingTown" DataType="System.String"/>
+        <Column Name="BillingContactPhone1" DataType="System.String"/>
+        <CommandParameter Name="qi" DataType="14" Expression="[qi]" DefaultValue="00000000-0000-0000-0000-000000000000"/>
+      </TableDataSource>
+    </MsSqlDataConnection>
+    <Parameter Name="qi" DataType="System.String"/>
+  </Dictionary>
+  <ReportPage Name="Page1" Watermark.Font="Arial, 60pt" StartPageEvent="Page1_StartPage">
+    <PageHeaderBand Name="PageHeader1" Width="718.2" Height="75.6">
+      <TextObject Name="Text80" Left="567" Top="9.45" Width="141.75" Height="56.7" Text="Quote" HorzAlign="Right" VertAlign="Center" Font="Calibri, 22pt" TextFill.Color="Blue"/>
+      <TextObject Name="Text9" Left="9.45" Top="9.45" Width="406.35" Height="56.7" Text="Flex Pte Ltd" VertAlign="Bottom" Font="Calibri, 24pt, style=Bold" TextFill.Color="128, 128, 255"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="79.6" Width="718.2" Height="132.3" EvenStyle="EvenRows">
+      <TextObject Name="Text79" Left="37.8" Top="9.45" Width="151.2" Height="18.9" Text="[Quote.QuoteId]" Font="Arial, 10pt"/>
+      <TextObject Name="Text3" Left="472.5" Top="18.9" Width="122.85" Height="18.9" Text="Date :" AllowExpressions="false" HorzAlign="Right" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text4" Left="472.5" Top="47.25" Width="122.85" Height="18.9" Text="Quote No :" HorzAlign="Right" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text5" Left="472.5" Top="75.6" Width="122.85" Height="18.9" Text="Expiration Date :" HorzAlign="Right" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text81" Left="604.8" Top="18.9" Width="103.95" Height="18.9" Text="[Quote.IssueDate]" Font="Arial, 10pt"/>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="215.9" Width="718.2" Height="18.9">
+      <TextObject Name="Text78" Width="718.2" Height="18.9" Dock="Fill" Text="[PageN]" HorzAlign="Right" Font="Arial, 10pt" Style="Footer"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>

@@ -1,0 +1,24 @@
+﻿<div class="card-body col-md-12">
+    <ul class="nav nav-tabs nav-justified col-md-12">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="pill" href="#daily" role="tab" aria-controls="tabs-daily" aria-selected="true">Daily Sales Report</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="pill" href="#Monthly" role="tab" aria-controls="tabs-Monthly" aria-selected="true">Monthly Sales Report</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="pill" href="#yearly" role="tab" aria-controls="tabs-yearly" aria-selected="false">Yearly Sales Report</a>
+        </li>
+    </ul>
+    <div class="tab-content mt-3">
+        <div class="tab-pane fade show active" id="daily" role="tabpanel" aria-labelledby="daily-tab">
+            @Html.Partial("_DailySalesReport.cshtml")
+        </div>
+        <div class="tab-pane fade" id="Monthly" role="tabpanel" aria-labelledby="Monthly-tab">
+            @Html.Partial("_MonthlySalesReport.cshtml")
+        </div>
+        <div class="tab-pane fade" id="yearly" role="tabpanel" aria-labelledby="yearly-tab">
+            @Html.Partial("_YearlySalesReport.cshtml")
+        </div>
+    </div>
+</div>

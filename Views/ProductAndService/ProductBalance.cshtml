@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Anastock.ViewModel.ProductBalanceViewModel>
+
+@{
+    ViewData["Title"] = "Stock Balance";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Stock Balance</strong>
+            </div>
+            <div class="card-body">
+                <table id="tbProd" class="tbQuote table table-responsive-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProductName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Balance)
+                            </th>
+                            <th>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ProductName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Balance)
+                                </td>
+                                <td>
+                                    <a asp-controller="ProductAndService" asp-action="ProductBalanceDetails" asp-route-id="@item.ProductId"><span class='fa fa-info'></span></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var table = $('#tbProd');
+
+        $(document).ready(function () {
+            table = table.DataTable({
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false,
+                }]
+            });
+        });
+
+    </script>
+}

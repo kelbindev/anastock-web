@@ -1,0 +1,149 @@
+﻿@model IEnumerable<BillViewModels>
+
+@{
+    ViewData["Title"] = "Bill";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Bill</strong>
+            </div>
+            <div class="card-body">
+
+                <a class="btn btn-sm btn-primary float-right" asp-action="New">Create Bill</a>
+                <br />
+                <br />
+
+                <table id="tbBill" class="tbBill table table-responsive-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BillNo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.VendorInvoiceNo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PurchaseOrderNo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IssueDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DueDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.AmountPaid)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BalanceDue)
+                            </th>
+                            <th class="no-sort">
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+                            <th class="no-sort">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.BillNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.VendorInvoiceNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PurchaseOrderNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IssueDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DueDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.AmountPaid)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.BalanceDue)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="fa fa-sm fa-ellipsis-v"></span>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a asp-controller="Bill" asp-action="Edit" asp-route-id="@item.BillId"
+                                               class="dropdown-item text-muted m-1">
+                                                <span class='fa fa-edit'></span> Edit
+                                            </a>
+                                            @if (item.Status == "Open" || item.Status == "On Progress")
+                                            {
+                                                <a id="payment" asp-controller="Bill" asp-action="NewPayment" asp-route-id="@item.BillId" class="dropdown-item text-muted"><span class='fa fa-receipt'></span> Create Payment</a>
+                                            }
+                                            <button type="button" class="dropdown-item text-muted m-1 text-danger"
+                                                    onclick="javascript: confirmDelete('@item.BillId', '@item.BillNo')">
+                                                <span class='fa fa-trash-alt'></span> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var table = $('#tbBill');
+
+        $(document).ready(function () {
+            table = table.DataTable({
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false,
+                }]
+            });
+        });
+
+        function confirmDelete(billId, poNo) {
+            var url = "/Bill/delete";
+
+            bootbox.confirm({
+                size: "large",
+                message: "Delete Bill [" + poNo + "]?",
+                callback: function (result) { /* result is a boolean; true = OK, false = Cancel*/
+                    if (result) {
+                        deletePO(url, billId);
+                    }
+                }
+            })
+        }
+
+        function deletePO(url, billId) {
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: { id: billId },
+                success: function (data) {
+                    bootbox.alert(data.message, function () {
+                        location.reload();
+                    });
+                }
+            });
+
+            return false;
+        }
+    </script>
+}

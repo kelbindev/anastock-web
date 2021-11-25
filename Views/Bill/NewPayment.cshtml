@@ -1,0 +1,142 @@
+﻿@model Anastock.Models.BillPayment
+@{
+    ViewData["Title"] = "Create Bill Payment";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Record payment</strong>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        @if (ViewBag.NewId != new Guid())
+                        {
+                            <div class="form-group">
+                                <label class="col-md-4 col-form-label text-left text-muted">Vendor</label>
+                                @Html.DropDownList("ListofVendor", (SelectList)ViewBag.ListofVendor, new { @disabled = "disabled", @class = "vendor form-control", id = "Vendor", @onchange = "loadBill(this)" })
+
+                                <span class="error text-danger">* Vendor required</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group">
+                                <label class="col-md-4 col-form-label text-left text-muted">Vendor</label>
+                                <select id="Vendor" class="vendor form-control"
+                                        asp-items="@(new SelectList(ViewBag.ListofVendor, "VendorId", "VendorName"))" onchange="loadBill(this)">
+                                </select>
+                                <span class="error text-danger">* Vendor required</span>
+                            </div>
+                        }
+                        <div class="form-group">
+                            <label asp-for="PaymentMethod" class="col-md-4 col-form-label text-left text-muted"></label>
+                            @Html.DropDownListFor(m => m.PaymentMethodId,
+                                 new SelectList(ViewBag.ListofPayment, "PaymentMethodId", "Description"), new { @class = "paymentmethod form-control", id = "PaymentMethod" })
+
+                            <span class="error text-danger">* Payment method required</span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="DescriptionOfTransaction" class="col-md-12 col-form-label text-left text-muted"></label>
+                            <textarea id="Description" asp-for="DescriptionOfTransaction" class="col-md-12 form-control" maxlength="250"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        @if (ViewBag.NewId != new Guid())
+                        {
+                            <div class="form-group">
+                                <label class="col-md-4 col-form-label text-left text-muted">Vendor</label>
+                                @Html.DropDownList("ListofBill", (SelectList)ViewBag.ListofBill, new { @disabled = "disabled", @class = "Bill form-control", id = "BillNo", @onchange = "loadBalance(this)" })
+
+                                <span class="error text-danger">* Vendor required</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group row">
+                                <label asp-for="LinkedBill" class="col-md-4 col-form-label text-right text-muted"></label>
+                                <select id="BillNo" class="Bill col-md-8 form-control" onchange="loadBalance(this)">
+                                </select>
+                                <span asp-validation-for="LinkedBill" class="error text-danger offset-md-4 offset-lg-4 offset-sm-0">* Bill number required</span>
+                            </div>
+                        }
+                        <div class="form-group row">
+                            <label asp-for="ReferenceNumber" class="col-md-4 col-form-label text-right text-muted">Reference number</label>
+                            <input asp-for="ReferenceNumber" id="ReferenceNo" class="col-md-8 form-control" />
+                            <span class="error text-danger offset-md-4 offset-lg-4 offset-sm-0">* Reference number required</span>
+                        </div>
+                        <div class="form-group row">
+                            <div class="input-group date" id="issueDate">
+                                <label asp-for="PaymentDate" class="col-md-4 col-form-label text-right text-muted">Date</label>
+                                <input id="PaymentDate" asp-for="PaymentDate" style="width:100%;" class="issuedate col-md-8 form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                <span class="error text-danger offset-md-4 offset-lg-4 offset-sm-0">* Payment Date required</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="item-summary-total">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td class="item-summary-title">
+                                            <strong>Balance Due</strong>
+                                        </td>
+                                        <td class="col-form-label">
+                                            @if (ViewBag.NewId != new Guid())
+                                            {
+                                                <label id="BalanceDue">$ @ViewBag.BalanceDue</label>
+                                            }
+                                            else
+                                            {
+                                                <label id="BalanceDue">$0.00</label>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="item-summary-title">
+                                            <strong>Amount received ($)</strong>
+                                        <td>
+                                            <input type="number" min="0" max="@ViewBag.BalanceDue" step="any" id="AmountPaid" name="AmountPaid" class="amountpaid form-control text-right" value="0.00">
+                                            <span class="error text-danger">* Amount received required</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div style="padding:10px 0;" class="float-right">
+                            @*<input id="cancel" type="button" value="Cancel" class="btn btn-outline-dark btn-sm" style="width:70px;" />*@
+                            <a id="cancel" asp-controller="Bill" asp-action="Index" value="Cancel" class="btn btn-outline-dark btn-sm" style="width:70px;">Cancel</a>
+                            <input id="submit" type="button" value="Save" class="btn btn-success btn-sm" style="min-width:70px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/billPayment.js"></script>
+}
+<style>
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 90%;
+    }
+
+    tr.error {
+        background-color: rgba(255,0,0,0.35);
+    }
+</style>

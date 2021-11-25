@@ -1,0 +1,44 @@
+[
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/lib/bootstrap/dist/css/bootstrap.min.css",
+      "wwwroot/css/site.css",
+      "wwwroot/lib/jqueryui/jquery-ui.css",
+      "wwwroot/css/tempusdominus-bootstrap-4.min.css",
+      //"wwwroot/lib/datatables.net/jquery.dataTables.min.css",
+      "wwwroot/font-awesome/css/all.css",
+      "wwwroot/css/sidebar/css/style.css",
+      "wwwroot/css/sidebar/css/bootstrap/_media.css",
+      "wwwroot/css/sidebar/css/bootstrap/utilities/_stretched-link.css",
+      "wwwroot/css/coreui.css",
+      "wwwroot/lib/datatables.net/dataTables.bootstrap4.min.css",
+      "wwwroot/lib/bootstrap/dist/css/bootstrap-datetimepicker.min.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/site.min.js",
+    "inputFiles": [
+      "wwwroot/lib/jquery/dist/jquery.min.js",
+      "wwwroot/js/moment.min.js",
+      "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
+      "wwwroot/lib/jqueryui/jquery-ui.js",
+      "wwwroot/lib/signalr/dist/browser/signalr.js",
+      "wwwroot/font-awesome/js/all.js",
+      "wwwroot/js/tempusdominus-bootstrap-4.min.js",
+      "wwwroot/css/sidebar/js/main.js",
+      "wwwroot/css/sidebar/js/popper.js",
+      "wwwroot/lib/bootbox.js/bootbox.min.js",
+      "wwwroot/lib/datatables.net/jquery.dataTables.js",
+      "wwwroot/lib/datatables.net/dataTables.bootstrap4.min.js",
+      "wwwroot/lib/bootstrap/dist/js/bootstrap-datetimepicker.min.js"
+
+
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  }
+]

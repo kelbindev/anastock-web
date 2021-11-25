@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="02/22/2021 10:29:12" ReportInfo.Modified="03/01/2021 13:07:37" ReportInfo.CreatorVersion="2021.1.16.0">
+  <Dictionary>
+    <MsSqlDataConnection Name="AnastockDatabase" ConnectionString="rijcmlqAFHGp6KQj27H4qUwAIR20hSnyrpNtgmeY+I5zyTmYE0HuZfX1hs9fAqnt4DRtzHm0lx1VahQ7y62CpId+5L7TSgKvO/z2OK2LNUpQ3s4fNjBFB9hBhSDQSuVqyoEWOj+JA3fgqHaXh9yrGuwrjla0e780bEMGhLBCoC9P2Bdqtkhup7KSKmRgoCiMkZAUw83uh5l2qOgPqt5CPPhS04JTw==">
+      <TableDataSource Name="Table1" Alias="Invoice" DataType="System.Int32" Enabled="true" SelectCommand="SELECT InvoiceNo, CustomerPONo, IssueDate, CustomerNotes, SubTotal, Tax, Total, PaymentTerm, PaymentTermValue, DueDate, DiscountType, DiscountValue,&#13;&#10;c.CustomerName, ca.BillingAddress, ca.BillingContactPerson, ca.BillingContactPhone1, ca.BillingCountry, ca.BillingPostalCode, ca.BillingState, ca.BillingTown,&#13;&#10;ca.ShippingAddress, ca.ShippingContactPerson, ca.ShippingContactPhone1, ca.ShippingCountry, ca.ShippingPostalCode, ca.ShippingState, ca.ShippingState, ca.ShippingTown, cc.GSTRegNo,&#13;&#10;cc.Name, cc.GST/100 AS GST, cc.Address AS CompanyAddress, cc.Phone AS CompanyPhone, cc.Website AS CompanyWebsite, cc.Fax AS CompanyFax, cc.Logo AS CompanyLogo, DATEDIFF(DAY, i.DueDate, GETDATE()) AS Due FROM Invoices i&#13;&#10;INNER JOIN Customers c ON i.CustomerId = c.CustomerId&#13;&#10;INNER JOIN CustomerAddresses ca ON i.CustomerAddressId = ca.CustomerAddressId&#13;&#10;INNER JOIN Company cc ON i.CompanyId = cc.CompanyId&#13;&#10;WHERE i.InvoiceId = @ii">
+        <Column Name="CustomerPONo" DataType="System.String"/>
+        <Column Name="IssueDate" DataType="System.DateTime"/>
+        <Column Name="CustomerNotes" DataType="System.String"/>
+        <Column Name="SubTotal" DataType="System.Decimal"/>
+        <Column Name="Tax" DataType="System.Decimal"/>
+        <Column Name="Total" DataType="System.Decimal"/>
+        <Column Name="PaymentTerm" DataType="System.String"/>
+        <Column Name="GST" DataType="System.Decimal"/>
+        <Column Name="CustomerName" DataType="System.String"/>
+        <Column Name="BillingAddress" DataType="System.String"/>
+        <Column Name="BillingContactPerson" DataType="System.String"/>
+        <Column Name="BillingCountry" DataType="System.String"/>
+        <Column Name="BillingPostalCode" DataType="System.String"/>
+        <Column Name="BillingState" DataType="System.String"/>
+        <Column Name="BillingTown" DataType="System.String"/>
+        <Column Name="BillingContactPhone1" DataType="System.String"/>
+        <Column Name="CompanyLogo" DataType="System.Byte[]" BindableControl="Picture"/>
+        <Column Name="CompanyWebsite" DataType="System.String"/>
+        <Column Name="CompanyAddress" DataType="System.String"/>
+        <Column Name="CompanyPhone" DataType="System.String"/>
+        <Column Name="CompanyFax" DataType="System.String"/>
+        <Column Name="InvoiceNo" DataType="System.String"/>
+        <Column Name="PaymentTermValue" DataType="System.Int32"/>
+        <Column Name="DueDate" DataType="System.DateTime"/>
+        <Column Name="ShippingAddress" DataType="System.String"/>
+        <Column Name="ShippingContactPerson" DataType="System.String"/>
+        <Column Name="ShippingContactPhone1" DataType="System.String"/>
+        <Column Name="ShippingCountry" DataType="System.String"/>
+        <Column Name="ShippingPostalCode" DataType="System.String"/>
+        <Column Name="ShippingState" DataType="System.String"/>
+        <Column Name="ShippingState1" DataType="System.String"/>
+        <Column Name="ShippingTown" DataType="System.String"/>
+        <Column Name="Name" DataType="System.String"/>
+        <Column Name="Due" DataType="System.Int32"/>
+        <Column Name="GSTRegNo" DataType="System.String"/>
+        <Column Name="DiscountType" DataType="System.String"/>
+        <Column Name="DiscountValue" DataType="System.Decimal"/>
+        <CommandParameter Name="ii" DataType="14" Expression="[ii]" DefaultValue="00000000-0000-0000-0000-000000000000"/>
+      </TableDataSource>
+      <TableDataSource Name="Table" Alias="InvoiceDetails" DataType="System.Int32" Enabled="true" SelectCommand="SELECT ROW_NUMBER() OVER (ORDER BY ps.Name ASC) AS No, ps.Name, qd.Description, qd.Qty, qd.UnitPrice, qd.DiscountPercent/100 AS DiscountPercent, qd.DiscountTotal, qd.UOM, qd.Total FROM InvoiceDetails qd INNER JOIN ProductAndService ps ON qd.ProductAndServiceId = ps.Id&#13;&#10;WHERE qd.InvoiceId = @ii">
+        <Column Name="No" DataType="System.Int64"/>
+        <Column Name="Name" DataType="System.String"/>
+        <Column Name="Description" DataType="System.String"/>
+        <Column Name="Qty" DataType="System.Decimal"/>
+        <Column Name="UnitPrice" DataType="System.Decimal"/>
+        <Column Name="DiscountPercent" DataType="System.Decimal"/>
+        <Column Name="DiscountTotal" DataType="System.Decimal"/>
+        <Column Name="Total" DataType="System.Decimal"/>
+        <Column Name="UOM" DataType="System.String"/>
+        <CommandParameter Name="ii" DataType="14" Expression="[ii]" DefaultValue="00000000-0000-0000-0000-000000000000"/>
+      </TableDataSource>
+    </MsSqlDataConnection>
+    <Parameter Name="ii" DataType="System.String" Expression="ii"/>
+    <Parameter Name="due" DataType="System.Int32" Expression="[Invoice.Due]"/>
+    <Parameter Name="billingcontactphone" DataType="System.String" Expression="[Invoice.BillingContactPhone1] == &quot;&quot; ? &quot;-&quot; : [Invoice.BillingContactPhone1]"/>
+    <Parameter Name="shippingcontactphone" DataType="System.String" Expression="[Invoice.ShippingContactPhone1] == &quot;&quot; ?  &quot;-&quot; : [Invoice.ShippingContactPhone1]"/>
+    <Parameter Name="discount" DataType="System.Decimal" Expression="[Invoice.DiscountType] == &quot;Percent&quot; ? ([Invoice.DiscountValue]/100)*[Invoice.SubTotal] : [Invoice.DiscountType] == &quot;Value&quot; ? [Invoice.DiscountValue] : 0"/>
+  </Dictionary>
+  <ReportPage Name="Page1" Watermark.Font="Arial, 60pt">
+    <PageHeaderBand Name="PageHeader1" Width="718.2" Height="85.05">
+      <TextObject Name="Text1" Left="434.7" Top="9.45" Width="264.6" Height="47.25" Text="Invoice" HorzAlign="Right" VertAlign="Center" Font="Raleway SemiBold, 20pt, style=Bold" TextFill.Color="55, 71, 79"/>
+      <LineObject Name="Line1" Left="9.45" Top="85.05" Width="689.85" Border.ShadowColor="30, 136, 229" Border.Color="30, 136, 229" Border.Width="2" Diagonal="true"/>
+      <PictureObject Name="Picture1" Left="9.45" Top="9.45" Width="321.3" Height="56.7" DataColumn="Invoice.CompanyLogo"/>
+      <TextObject Name="Text87" Left="481.95" Top="56.7" Width="217.35" Height="18.9" Text="GST Reg No : [Invoice.GSTRegNo]" Format="Date" Format.Format="d" HorzAlign="Right" VertAlign="Center" Font="Lato, 10pt, style=Bold" TextFill.Color="Red"/>
+    </PageHeaderBand>
+    <DataBand Name="MasterData" Top="89.05" Width="718.2" Height="368.55">
+      <TextObject Name="Text11" Left="113.4" Top="37.8" Width="217.35" Height="18.9" Text="[Invoice.BillingContactPerson]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text12" Left="113.4" Top="66.15" Width="217.35" Height="18.9" Text="[Invoice.CustomerName]" Format="Date" Format.Format="d" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text13" Left="113.4" Top="122.85" Width="217.35" Height="18.9" Text="[Invoice.BillingAddress]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text14" Left="113.4" Top="141.75" Width="217.35" Height="18.9" Text="[Invoice.BillingCountry] [Invoice.BillingPostalCode]" Format="Date" Format.Format="d" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text17" Left="113.4" Top="94.5" Width="217.35" Height="18.9" Text="[billingcontactphone]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text49" Left="9.45" Top="37.8" Width="85.05" Height="18.9" Text="Name" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text50" Left="9.45" Top="66.15" Width="85.05" Height="18.9" Text="Company" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text51" Left="9.45" Top="94.5" Width="85.05" Height="18.9" Text="Telephone" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text55" Left="9.45" Top="122.85" Width="85.05" Height="18.9" Text="Address" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text56" Left="94.5" Top="37.8" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text57" Left="94.5" Top="66.15" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text58" Left="94.5" Top="94.5" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text62" Left="94.5" Top="122.85" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text66" Left="378" Top="18.9" Width="85.05" Height="18.9" Text="Date" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text67" Left="378" Top="47.25" Width="85.05" Height="18.9" Text="Quote No" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text68" Left="378" Top="103.95" Width="85.05" Height="18.9" Text="Due Date" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text69" Left="481.95" Top="18.9" Width="217.35" Height="18.9" Text="[Invoice.IssueDate]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text70" Left="463.05" Top="18.9" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text71" Left="463.05" Top="47.25" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text72" Left="463.05" Top="103.95" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text73" Left="481.95" Top="47.25" Width="217.35" Height="18.9" Text="[Invoice.InvoiceNo]" Format="Date" Format.Format="d" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text74" Left="481.95" Top="103.95" Width="217.35" Height="18.9" Text="[Invoice.DueDate]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text75" Left="378" Top="132.3" Width="85.05" Height="18.9" Text="From" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text76" Left="463.05" Top="132.3" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text77" Left="481.95" Top="132.3" Width="217.35" Height="18.9" Text="[Invoice.Name]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text78" Left="378" Top="160.65" Width="85.05" Height="18.9" Text="Telephone" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text79" Left="481.95" Top="160.65" Width="217.35" Height="18.9" Text="[Invoice.CompanyPhone]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text80" Left="463.05" Top="160.65" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text81" Left="378" Top="189" Width="85.05" Height="18.9" Text="Fax" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text82" Left="463.05" Top="189" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text83" Left="481.95" Top="189" Width="217.35" Height="18.9" Text="[Invoice.CompanyFax]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text84" Left="378" Top="217.35" Width="85.05" Height="18.9" Text="Address" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text85" Left="463.05" Top="217.35" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text86" Left="481.95" Top="217.35" Width="217.35" Height="18.9" CanGrow="true" Text="[Invoice.CompanyAddress]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text91" Left="9.45" Top="9.45" Width="85.05" Height="18.9" Text="Bill To :" AllowExpressions="false" VertAlign="Bottom" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text92" Left="113.4" Top="217.35" Width="217.35" Height="18.9" Text="[Invoice.ShippingContactPerson]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text93" Left="113.4" Top="245.7" Width="217.35" Height="18.9" Text="[Invoice.CustomerName]" Format="Date" Format.Format="d" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text94" Left="113.4" Top="302.4" Width="217.35" Height="18.9" Text="[Invoice.ShippingAddress]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text96" Left="113.4" Top="274.05" Width="217.35" Height="18.9" Text="[shippingcontactphone]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text97" Left="9.45" Top="217.35" Width="85.05" Height="18.9" Text="Name" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text98" Left="9.45" Top="245.7" Width="85.05" Height="18.9" Text="Company" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text99" Left="9.45" Top="274.05" Width="85.05" Height="18.9" Text="Telephone" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text100" Left="9.45" Top="302.4" Width="85.05" Height="18.9" Text="Address" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text101" Left="94.5" Top="217.35" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text102" Left="94.5" Top="245.7" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text103" Left="94.5" Top="274.05" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text104" Left="94.5" Top="302.4" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text105" Left="9.45" Top="189" Width="85.05" Height="18.9" Text="Ship To :" AllowExpressions="false" VertAlign="Bottom" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text95" Left="113.4" Top="321.3" Width="217.35" Height="18.9" Text="[Invoice.BillingCountry] [Invoice.BillingPostalCode]" Format="Date" Format.Format="d" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text106" Left="378" Top="75.6" Width="85.05" Height="18.9" Text="PO No" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text107" Left="463.05" Top="75.6" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text108" Left="481.95" Top="75.6" Width="217.35" Height="18.9" Text="[Invoice.CustomerPONo]" Format="Date" Format.Format="d" Font="Open Sans, 10pt"/>
+      <DataBand Name="Details" Top="493.95" Width="718.2" Height="28.35" Border.ShadowColor="Transparent" DataSource="Table">
+        <TableObject Name="Table1" Left="9.45" Width="689.85" Height="28.35" Border.Lines="Top, Bottom">
+          <TableColumn Name="Column1" Width="170.1"/>
+          <TableColumn Name="Column2" Width="236.25"/>
+          <TableColumn Name="Column3"/>
+          <TableColumn Name="Column4" Width="56.7"/>
+          <TableColumn Name="Column5" Width="75.6"/>
+          <TableColumn Name="Column7" Width="85.05"/>
+          <TableRow Name="Row1" Height="28.35">
+            <TableCell Name="Cell1" Border.ShadowColor="Transparent" Text="[InvoiceDetails.Name]" Padding="2, 4, 2, 1" Font="Open Sans, 10pt"/>
+            <TableCell Name="Cell2" Border.ShadowColor="216, 219, 224" Text="[InvoiceDetails.Description]" Padding="2, 4, 2, 1" Font="Open Sans, 10pt"/>
+            <TableCell Name="Cell3" Border.ShadowColor="216, 219, 224" Text="[InvoiceDetails.Qty]" Padding="2, 4, 2, 1" Format="Number" Format.UseLocale="false" Format.DecimalDigits="2" Format.DecimalSeparator="." Format.GroupSeparator="," Format.NegativePattern="1" HorzAlign="Right" Font="Open Sans, 10pt"/>
+            <TableCell Name="Cell4" Border.ShadowColor="216, 219, 224" Text="[InvoiceDetails.UOM]" Padding="2, 4, 2, 1" Font="Open Sans, 10pt"/>
+            <TableCell Name="Cell5" Border.ShadowColor="216, 219, 224" Text="[InvoiceDetails.UnitPrice]" Padding="2, 4, 2, 1" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" Font="Open Sans, 10pt"/>
+            <TableCell Name="Cell31" Border.ShadowColor="216, 219, 224" Text="[InvoiceDetails.Total]" Padding="2, 4, 2, 1" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" Font="Open Sans, 10pt"/>
+          </TableRow>
+        </TableObject>
+        <DataHeaderBand Name="DataHeader1" Top="461.6" Width="718.2" Height="28.35">
+          <TextObject Name="Text20" Left="9.45" Width="170.1" Height="28.35" Border.ShadowColor="216, 219, 224" Border.Lines="Bottom" Border.Color="216, 219, 224" Text="Items" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text21" Left="179.55" Width="236.25" Height="28.35" Border.ShadowColor="216, 219, 224" Border.Lines="Bottom" Border.Color="216, 219, 224" Text="Description" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text22" Left="415.8" Width="66.15" Height="28.35" Border.ShadowColor="216, 219, 224" Border.Lines="Bottom" Border.Color="216, 219, 224" Text="Quantity" HorzAlign="Right" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text23" Left="538.65" Width="75.6" Height="28.35" Border.ShadowColor="216, 219, 224" Border.Lines="Bottom" Border.Color="216, 219, 224" Text="Price" HorzAlign="Right" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text25" Left="614.25" Width="85.05" Height="28.35" Border.ShadowColor="216, 219, 224" Border.Lines="Bottom" Border.Color="216, 219, 224" Text="Total" HorzAlign="Right" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text41" Left="481.95" Width="56.7" Height="28.35" Border.ShadowColor="216, 219, 224" Border.Lines="Bottom" Border.Color="216, 219, 224" Text="UOM" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+        </DataHeaderBand>
+        <DataFooterBand Name="DataFooter1" Top="526.3" Width="718.2" Height="179.55">
+          <TextObject Name="Text32" Left="472.5" Top="9.45" Width="141.75" Height="18.9" Text="SubTotal" HorzAlign="Right" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text34" Left="472.5" Top="66.15" Width="141.75" Height="18.9" Text="GST" HorzAlign="Right" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text36" Left="472.5" Top="94.5" Width="141.75" Height="18.9" Text="Grand Total" HorzAlign="Right" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text38" Left="614.25" Top="9.45" Width="85.05" Height="18.9" Text="[Invoice.SubTotal]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Open Sans, 10pt" Trimming="EllipsisCharacter"/>
+          <TextObject Name="Text39" Left="614.25" Top="66.15" Width="85.05" Height="18.9" Text="[Invoice.GST]" Format="Percent" Format.UseLocale="false" Format.DecimalDigits="2" Format.DecimalSeparator="." Format.GroupSeparator="," Format.PercentSymbol="%" Format.PositivePattern="1" Format.NegativePattern="1" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Open Sans, 10pt" Trimming="EllipsisCharacter"/>
+          <TextObject Name="Text40" Left="614.25" Top="94.5" Width="85.05" Height="18.9" Text="[Invoice.Total]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Open Sans, 10pt" Trimming="EllipsisCharacter"/>
+          <TextObject Name="Text43" Left="9.45" Top="94.5" Width="94.5" Height="18.9" Text="Notes : " VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text44" Left="9.45" Top="113.4" Width="321.3" Height="66.15" Text="[Invoice.CustomerNotes]" Font="Open Sans, 10pt"/>
+          <LineObject Name="Line4" Left="245.7" Top="179.55" Diagonal="true"/>
+          <TextObject Name="Text109" Left="472.5" Top="37.8" Width="141.75" Height="18.9" Text="Discount" HorzAlign="Right" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text110" Left="614.25" Top="37.8" Width="85.05" Height="18.9" Text="[discount]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Open Sans, 10pt" Trimming="EllipsisCharacter"/>
+        </DataFooterBand>
+      </DataBand>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="709.85" Width="718.2" Height="217.35">
+      <TextObject Name="Text88" Left="9.45" Top="160.65" Width="689.85" Height="18.9" Text="[Invoice.Name]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Center" VertAlign="Center" WordWrap="false" Font="Open Sans, 9pt, style=Bold" Trimming="EllipsisCharacter"/>
+      <LineObject Name="Line5" Left="9.45" Top="151.2" Width="689.85" Border.ShadowColor="30, 136, 229" Border.Color="30, 136, 229" Border.Width="2" Diagonal="true"/>
+      <TextObject Name="Text89" Left="9.45" Top="179.55" Width="689.85" Height="18.9" Text="[Invoice.CompanyAddress]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Center" VertAlign="Center" WordWrap="false" Font="Open Sans, 8pt" Trimming="EllipsisCharacter"/>
+      <TextObject Name="Text90" Left="9.45" Top="198.45" Width="689.85" Height="18.9" Text="Tel : [Invoice.CompanyPhone]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Center" VertAlign="Center" WordWrap="false" Font="Open Sans, 8pt" Trimming="EllipsisCharacter"/>
+      <LineObject Name="Line3" Left="472.5" Top="132.3" Width="226.8" Diagonal="true"/>
+      <TextObject Name="Text45" Left="472.5" Top="9.45" Width="226.8" Height="28.35" Anchor="Bottom, Right" Text="Signature" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>

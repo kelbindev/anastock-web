@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="02/22/2021 10:29:12" ReportInfo.Modified="03/01/2021 13:37:16" ReportInfo.CreatorVersion="2021.1.16.0">
+  <Dictionary>
+    <MsSqlDataConnection Name="AnastockDatabase" ConnectionString="rijcmlqAFHGp6KQj27H4qUwAIR20hSnyrpNtgmeY+I5zyTmYE0HuZfX1hs9fAqnt4DRtzHm0lx1VahQ7y62CpId+5L7TSgKvO/z2OK2LNUpQ3s4fNjBFB9hBhSDQSuVqyoEWOj+JA3fgqHaXh9yrGuwrjla0e780bEMGhLBCoC9P2Bdqtkhup7KSKmRgoCiMkZAUw83xyuzLDr0GH3LLzDDl0QQIQ==">
+      <TableDataSource Name="Table1" Alias="PurchaseOrder" DataType="System.Int32" Enabled="true" SelectCommand="SELECT po.*, c.Name AS CompanyName, c.GST/100 AS GST, c.Address AS CompanyAddress, c.Phone AS CompanyPhone, c.Fax AS CompanyFax,  c.GSTRegNo, c.Website AS CompanyWebsite, c.Logo AS CompanyLogo, v.VendorName, ca.BillingAddress, ca.BillingContactPerson, ca.BillingCountry, ca.BillingPostalCode, ca.BillingState, ca.BillingTown, ca.BillingContactPhone1,&#13;&#10;ca.BillingContactPhone2, ca.BillingContactEmail, ca.BillingContactFax FROM PurchaseOrders po INNER JOIN Company c ON po.CompanyId = c.CompanyId&#13;&#10;INNER JOIN Vendors v ON po.VendorId = v.VendorId INNER JOIN VendorAddresses ca ON po.VendorAddressId = ca.VendorAddressId WHERE po.Id = @poId">
+        <Column Name="IssueDate" DataType="System.DateTime"/>
+        <Column Name="TaxInclusive" DataType="System.Boolean" BindableControl="CheckBox"/>
+        <Column Name="SubTotal" DataType="System.Decimal"/>
+        <Column Name="Tax" DataType="System.Decimal"/>
+        <Column Name="Total" DataType="System.Decimal"/>
+        <Column Name="CreditTerm" DataType="System.String"/>
+        <Column Name="ShippingTerm" DataType="System.String"/>
+        <Column Name="DeliveryTerm" DataType="System.String"/>
+        <Column Name="PaymentTerm" DataType="System.String"/>
+        <Column Name="isCurrentUse" DataType="System.Boolean" BindableControl="CheckBox"/>
+        <Column Name="CompanyName" DataType="System.String"/>
+        <Column Name="GST" DataType="System.Decimal"/>
+        <Column Name="Status" DataType="System.String"/>
+        <Column Name="RevisionNo" DataType="System.Int32"/>
+        <Column Name="CreatedBy" DataType="System.String"/>
+        <Column Name="CreatedDate" DataType="System.DateTime"/>
+        <Column Name="UpdatedBy" DataType="System.String"/>
+        <Column Name="UpdatedDate" DataType="System.DateTime"/>
+        <Column Name="IsDeleted" DataType="System.Boolean" BindableControl="CheckBox"/>
+        <Column Name="CompanyId" DataType="System.Int32"/>
+        <Column Name="BillingAddress" DataType="System.String"/>
+        <Column Name="BillingContactPerson" DataType="System.String"/>
+        <Column Name="BillingCountry" DataType="System.String"/>
+        <Column Name="BillingPostalCode" DataType="System.String"/>
+        <Column Name="BillingState" DataType="System.String"/>
+        <Column Name="BillingTown" DataType="System.String"/>
+        <Column Name="BillingContactPhone1" DataType="System.String"/>
+        <Column Name="CompanyLogo" DataType="System.Byte[]" BindableControl="Picture"/>
+        <Column Name="CompanyWebsite" DataType="System.String"/>
+        <Column Name="CompanyAddress" DataType="System.String"/>
+        <Column Name="CompanyPhone" DataType="System.String"/>
+        <Column Name="CompanyFax" DataType="System.String"/>
+        <Column Name="DiscountValue" DataType="System.Decimal"/>
+        <Column Name="DiscountType" DataType="System.String"/>
+        <Column Name="GSTRegNo" DataType="System.String"/>
+        <Column Name="BillingContactPhone2" DataType="System.String"/>
+        <Column Name="BillingContactEmail" DataType="System.String"/>
+        <Column Name="BillingContactFax" DataType="System.String"/>
+        <Column Name="Id" DataType="System.Guid"/>
+        <Column Name="PurchaseOrderNo" DataType="System.String"/>
+        <Column Name="VendorInvoiceNo" DataType="System.String"/>
+        <Column Name="DueDate" DataType="System.DateTime"/>
+        <Column Name="VendorNotes" DataType="System.String"/>
+        <Column Name="VendorId" DataType="System.Guid"/>
+        <Column Name="VendorAddressId" DataType="System.Int32"/>
+        <Column Name="PaymentTermValue" DataType="System.Int32"/>
+        <Column Name="VendorName" DataType="System.String"/>
+        <CommandParameter Name="poid" DataType="14" Expression="[poId]" DefaultValue="00000000-0000-0000-0000-000000000000"/>
+      </TableDataSource>
+      <TableDataSource Name="Table" Alias="PurchaseOrderDetails" DataType="System.Int32" Enabled="true" SelectCommand="SELECT ROW_NUMBER() OVER (ORDER BY ps.Name ASC) AS No, ps.Name, pod.Description, pod.Qty, pod.UnitPrice, pod.DiscountPercent/100 AS DiscountPercent, pod.DiscountTotal, pod.UOM, pod.Total FROM PurchaseOrderDetails pod INNER JOIN ProductAndService ps ON pod.ProductAndServiceId = ps.Id&#13;&#10;WHERE pod.PurchaseOrderId = @poId">
+        <Column Name="No" DataType="System.Int64"/>
+        <Column Name="Name" DataType="System.String"/>
+        <Column Name="Description" DataType="System.String"/>
+        <Column Name="Qty" DataType="System.Decimal"/>
+        <Column Name="UnitPrice" DataType="System.Decimal"/>
+        <Column Name="DiscountPercent" DataType="System.Decimal"/>
+        <Column Name="DiscountTotal" DataType="System.Decimal"/>
+        <Column Name="Total" DataType="System.Decimal"/>
+        <Column Name="UOM" DataType="System.String"/>
+        <CommandParameter Name="poId" DataType="14" Expression="[poId]" DefaultValue="00000000-0000-0000-0000-000000000000"/>
+      </TableDataSource>
+    </MsSqlDataConnection>
+    <Parameter Name="poId" DataType="System.String" Expression="poId"/>
+    <Parameter Name="companyName" DataType="System.String" Expression="companyName"/>
+    <Parameter Name="discount" DataType="System.Decimal" Expression="[PurchaseOrder.DiscountType] == &quot;Percent&quot; ? ([PurchaseOrder.DiscountValue]/100)*[PurchaseOrder.SubTotal] : [PurchaseOrder.DiscountType] == &quot;Value&quot; ? [PurchaseOrder.DiscountValue] : 0"/>
+  </Dictionary>
+  <ReportPage Name="Page1" Watermark.Font="Arial, 60pt">
+    <PageHeaderBand Name="PageHeader1" Width="718.2" Height="85.05">
+      <TextObject Name="Text1" Left="434.7" Top="9.45" Width="264.6" Height="47.25" Text="Purchase Order" HorzAlign="Right" VertAlign="Center" Font="Raleway SemiBold, 20pt, style=Bold" TextFill.Color="55, 71, 79"/>
+      <LineObject Name="Line1" Left="9.45" Top="85.05" Width="689.85" Border.ShadowColor="30, 136, 229" Border.Color="30, 136, 229" Border.Width="2" Diagonal="true"/>
+      <PictureObject Name="Picture1" Left="9.45" Top="9.45" Width="321.3" Height="56.7" DataColumn="PurchaseOrder.CompanyLogo"/>
+      <TextObject Name="Text87" Left="481.95" Top="56.7" Width="217.35" Height="18.9" Text="GST Reg No : [PurchaseOrder.GSTRegNo]" Format="Date" Format.Format="d" HorzAlign="Right" VertAlign="Center" Font="Lato, 10pt, style=Bold" TextFill.Color="Red"/>
+    </PageHeaderBand>
+    <DataBand Name="MasterData" Top="89.05" Width="718.2" Height="255.15">
+      <TextObject Name="Text11" Left="113.4" Top="18.9" Width="217.35" Height="18.9" Text="[PurchaseOrder.BillingContactPerson]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text12" Left="113.4" Top="47.25" Width="217.35" Height="18.9" Text="[PurchaseOrder.VendorName]" Format="Date" Format.Format="d" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text13" Left="113.4" Top="189" Width="217.35" Height="18.9" Text="[PurchaseOrder.BillingAddress]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text14" Left="113.4" Top="207.9" Width="217.35" Height="18.9" Text="[PurchaseOrder.BillingCountry] [PurchaseOrder.BillingPostalCode]" Format="Date" Format.Format="d" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text17" Left="113.4" Top="75.6" Width="217.35" Height="18.9" Text="[PurchaseOrder.BillingContactPhone1]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text49" Left="9.45" Top="18.9" Width="85.05" Height="18.9" Text="Name" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text50" Left="9.45" Top="47.25" Width="85.05" Height="18.9" Text="Company" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text51" Left="9.45" Top="75.6" Width="85.05" Height="18.9" Text="Telephone" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text52" Left="9.45" Top="103.95" Width="85.05" Height="18.9" Text="Mobile" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text53" Left="9.45" Top="132.3" Width="85.05" Height="18.9" Text="Fax" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text54" Left="9.45" Top="160.65" Width="85.05" Height="18.9" Text="Email" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text55" Left="9.45" Top="189" Width="85.05" Height="18.9" Text="Address" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text56" Left="94.5" Top="18.9" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text57" Left="94.5" Top="47.25" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text58" Left="94.5" Top="75.6" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text59" Left="94.5" Top="103.95" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text60" Left="94.5" Top="132.3" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text61" Left="94.5" Top="160.65" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text62" Left="94.5" Top="189" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text63" Left="113.4" Top="132.3" Width="217.35" Height="18.9" Text="[PurchaseOrder.BillingContactFax]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text64" Left="113.4" Top="160.65" Width="217.35" Height="18.9" Text="[PurchaseOrder.BillingContactEmail]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text65" Left="113.4" Top="103.95" Width="217.35" Height="18.9" Text="[PurchaseOrder.BillingContactPhone2]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text66" Left="378" Top="18.9" Width="85.05" Height="18.9" Text="Date" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text67" Left="378" Top="47.25" Width="85.05" Height="18.9" Text="PO No" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text68" Left="378" Top="75.6" Width="85.05" Height="18.9" Text="Due Date" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text69" Left="481.95" Top="18.9" Width="217.35" Height="18.9" Text="[PurchaseOrder.IssueDate]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text70" Left="463.05" Top="18.9" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text71" Left="463.05" Top="47.25" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text72" Left="463.05" Top="75.6" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text73" Left="481.95" Top="47.25" Width="217.35" Height="18.9" Text="[PurchaseOrder.PurchaseOrderNo]" Format="Date" Format.Format="d" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text74" Left="481.95" Top="75.6" Width="217.35" Height="18.9" Text="[PurchaseOrder.DueDate]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text75" Left="378" Top="103.95" Width="85.05" Height="18.9" Text="From" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text76" Left="463.05" Top="103.95" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text77" Left="481.95" Top="103.95" Width="217.35" Height="18.9" Text="[PurchaseOrder.CompanyName]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text78" Left="378" Top="132.3" Width="85.05" Height="18.9" Text="Telephone" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text79" Left="481.95" Top="132.3" Width="217.35" Height="18.9" Text="[PurchaseOrder.CompanyPhone]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text80" Left="463.05" Top="132.3" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text81" Left="378" Top="160.65" Width="85.05" Height="18.9" Text="Fax" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text82" Left="463.05" Top="160.65" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text83" Left="481.95" Top="160.65" Width="217.35" Height="18.9" Text="[PurchaseOrder.CompanyFax]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <TextObject Name="Text84" Left="378" Top="189" Width="85.05" Height="18.9" Text="Address" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text85" Left="463.05" Top="189" Width="18.9" Height="18.9" Text=":" AllowExpressions="false" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+      <TextObject Name="Text86" Left="481.95" Top="189" Width="217.35" Height="18.9" CanGrow="true" Text="[PurchaseOrder.CompanyAddress]" Format="Date" Format.Format="d" VertAlign="Center" Font="Open Sans, 10pt"/>
+      <DataBand Name="Details" Top="380.55" Width="718.2" Height="28.35" Border.ShadowColor="Transparent" DataSource="Table">
+        <TableObject Name="Table1" Left="9.45" Width="689.85" Height="28.35" Border.Lines="Top, Bottom">
+          <TableColumn Name="Column1" Width="160.65"/>
+          <TableColumn Name="Column2" Width="179.55"/>
+          <TableColumn Name="Column3"/>
+          <TableColumn Name="Column4" Width="56.7"/>
+          <TableColumn Name="Column5" Width="75.6"/>
+          <TableColumn Name="Column6"/>
+          <TableColumn Name="Column7" Width="85.05"/>
+          <TableRow Name="Row1" Height="28.35">
+            <TableCell Name="Cell1" Border.ShadowColor="Transparent" Text="[PurchaseOrderDetails.Name]" Padding="2, 4, 2, 1" Font="Open Sans, 10pt"/>
+            <TableCell Name="Cell2" Border.ShadowColor="216, 219, 224" Text="[PurchaseOrderDetails.Description]" Padding="2, 4, 2, 1" Font="Open Sans, 10pt"/>
+            <TableCell Name="Cell3" Border.ShadowColor="216, 219, 224" Text="[PurchaseOrderDetails.Qty]" Padding="2, 4, 2, 1" Format="Number" Format.UseLocale="false" Format.DecimalDigits="2" Format.DecimalSeparator="." Format.GroupSeparator="," Format.NegativePattern="1" HorzAlign="Right" Font="Open Sans, 10pt"/>
+            <TableCell Name="Cell4" Border.ShadowColor="216, 219, 224" Text="[PurchaseOrderDetails.UOM]" Padding="2, 4, 2, 1" Font="Open Sans, 10pt"/>
+            <TableCell Name="Cell5" Border.ShadowColor="216, 219, 224" Text="[PurchaseOrderDetails.UnitPrice]" Padding="2, 4, 2, 1" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" Font="Open Sans, 10pt"/>
+            <TableCell Name="Cell26" Border.ShadowColor="216, 219, 224" Text="[PurchaseOrderDetails.DiscountPercent]" Padding="2, 4, 2, 1" Format="Percent" Format.UseLocale="false" Format.DecimalDigits="2" Format.DecimalSeparator="." Format.GroupSeparator="," Format.PercentSymbol="%" Format.PositivePattern="1" Format.NegativePattern="1" HorzAlign="Right" Font="Open Sans, 10pt"/>
+            <TableCell Name="Cell31" Border.ShadowColor="216, 219, 224" Text="[PurchaseOrderDetails.Total]" Padding="2, 4, 2, 1" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" Font="Open Sans, 10pt"/>
+          </TableRow>
+        </TableObject>
+        <DataHeaderBand Name="DataHeader1" Top="348.2" Width="718.2" Height="28.35">
+          <TextObject Name="Text20" Left="9.45" Width="160.65" Height="28.35" Border.ShadowColor="216, 219, 224" Border.Lines="Bottom" Border.Color="216, 219, 224" Text="Items" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text21" Left="170.1" Width="179.55" Height="28.35" Border.ShadowColor="216, 219, 224" Border.Lines="Bottom" Border.Color="216, 219, 224" Text="Description" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text22" Left="349.65" Width="66.15" Height="28.35" Border.ShadowColor="216, 219, 224" Border.Lines="Bottom" Border.Color="216, 219, 224" Text="Quantity" HorzAlign="Right" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text23" Left="472.5" Width="75.6" Height="28.35" Border.ShadowColor="216, 219, 224" Border.Lines="Bottom" Border.Color="216, 219, 224" Text="Price" HorzAlign="Right" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text24" Left="548.1" Width="66.15" Height="28.35" Border.ShadowColor="216, 219, 224" Border.Lines="Bottom" Border.Color="216, 219, 224" Text="Discount" HorzAlign="Right" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text25" Left="614.25" Width="85.05" Height="28.35" Border.ShadowColor="216, 219, 224" Border.Lines="Bottom" Border.Color="216, 219, 224" Text="Total" HorzAlign="Right" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text41" Left="415.8" Width="56.7" Height="28.35" Border.ShadowColor="216, 219, 224" Border.Lines="Bottom" Border.Color="216, 219, 224" Text="UOM" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+        </DataHeaderBand>
+        <DataFooterBand Name="DataFooter1" Top="412.9" Width="718.2" Height="179.55">
+          <TextObject Name="Text36" Left="472.5" Top="37.8" Width="141.75" Height="18.9" Text="Total" HorzAlign="Right" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text40" Left="614.25" Top="37.8" Width="85.05" Height="18.9" Text="[PurchaseOrder.Total]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Open Sans, 10pt" Trimming="EllipsisCharacter"/>
+          <TextObject Name="Text43" Left="9.45" Top="94.5" Width="94.5" Height="18.9" Text="Notes : " VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text44" Left="9.45" Top="113.4" Width="321.3" Height="66.15" Text="[PurchaseOrder.VendorNotes]" Font="Open Sans, 10pt"/>
+          <LineObject Name="Line4" Left="245.7" Top="179.55" Diagonal="true"/>
+          <TextObject Name="Text91" Left="472.5" Top="9.45" Width="141.75" Height="18.9" Text="Discount" HorzAlign="Right" VertAlign="Center" Font="Lato, 10pt, style=Bold"/>
+          <TextObject Name="Text92" Left="614.25" Top="9.45" Width="85.05" Height="18.9" Text="[discount]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" VertAlign="Center" WordWrap="false" Font="Open Sans, 10pt" Trimming="EllipsisCharacter"/>
+        </DataFooterBand>
+      </DataBand>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="596.45" Width="718.2" Height="217.35">
+      <TextObject Name="Text88" Left="9.45" Top="160.65" Width="689.85" Height="18.9" Text="[PurchaseOrder.CompanyName]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Center" VertAlign="Center" WordWrap="false" Font="Open Sans, 9pt, style=Bold" Trimming="EllipsisCharacter"/>
+      <LineObject Name="Line5" Left="9.45" Top="151.2" Width="689.85" Border.ShadowColor="30, 136, 229" Border.Color="30, 136, 229" Border.Width="2" Diagonal="true"/>
+      <TextObject Name="Text89" Left="9.45" Top="179.55" Width="689.85" Height="18.9" Text="[PurchaseOrder.CompanyAddress]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Center" VertAlign="Center" WordWrap="false" Font="Open Sans, 8pt" Trimming="EllipsisCharacter"/>
+      <TextObject Name="Text90" Left="9.45" Top="198.45" Width="689.85" Height="18.9" Text="Tel : [PurchaseOrder.CompanyPhone]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Center" VertAlign="Center" WordWrap="false" Font="Open Sans, 8pt" Trimming="EllipsisCharacter"/>
+      <LineObject Name="Line3" Left="472.5" Top="132.3" Width="226.8" Diagonal="true"/>
+      <TextObject Name="Text45" Left="472.5" Top="9.45" Width="226.8" Height="28.35" Anchor="Bottom, Right" Text="Signature" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>

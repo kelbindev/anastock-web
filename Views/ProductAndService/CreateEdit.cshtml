@@ -1,0 +1,150 @@
+﻿@model ProductAndServiceViewModel;
+
+@{
+    Layout = null;
+}
+
+<div class="modal-content" id="modalContent">
+    <form enctype="multipart/form-data" asp-controller="ProductAndService" asp-action="CreateEdit" method="post" class="mt-3"
+          id="formCreatePS" name="formCreatePS" onsubmit="SubmitFormCreateEdit(this); return false;">
+        <!--Modal Header Start-->
+        <!--Modal Header End-->
+        <div class="modal-header">
+            <h4 class="modal-title">@ViewBag.ModalTitle</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body">
+            @Html.HiddenFor(model => model.ProductAndServiceId)
+            <input type="hidden" id="hdfPSId">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <label asp-for="Name" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-6">
+                            <input asp-for="Name" class="form-control" placeholder="Name" id="tbName">
+                            <span asp-validation-for="Name" class="text-danger">Name is Required</span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="CategoryId" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-6" style="padding-left:23px">
+                            <div class="form-check form-check-inline">
+                                <input asp-for="CategoryId" class="form-check-input" type="radio" name="CategoryId" id="Product" value="1" checked="checked">
+                                <label class="form-check-label" for="Product">Product</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input asp-for="CategoryId" class="form-check-input" type="radio" name="CategoryId" id="Service" value="2">
+                                <label class="form-check-label" for="Service">Service</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="UOM" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-4">
+                            <input asp-for="UOM" class="form-control" placeholder="UOM" id="tbUOM" onkeyup="checkAllUOM()">
+                            <span asp-validation-for="UOM" class="text-danger">UOM is Required</span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <div class="form-check">
+                                <input asp-for="isActive" class="form-check-input" type="checkbox" value="true" id="isActive" checked="checked" onchange="this.value=this.checked">
+                                <label class="form-check-label" for="isActive">
+                                    Active
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <div class="form-check">
+                                <input asp-for="isSell" class="form-check-input" type="checkbox" id="isSell" onchange="enableSell(this)">
+                                <label class="form-check-label" for="isSell">
+                                    Sell
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="sellPrice">Price</label>
+                            <input asp-for="SellPrice" type="number" class="form-control" id="sellPrice" placeholder="0"
+                                   disabled="@(Model.isSell == true?null:"disabled")">
+                            <span asp-validation-for="SellPrice" class="text-danger">Price is Required</span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="sellUOM">UOM</label>
+                            <input asp-for="SellUOM" type="text" class="form-control" id="sellUOM" placeholder="Pcs"
+                                   disabled="@(Model.isSell == true?null:"disabled")" onkeyup="checkUOM(this,'sell')">
+                            <span asp-validation-for="SellUOM" class="text-danger">UOM is Required</span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="sellQty">Qty</label>
+                            <input asp-for="SellQty" type="text" class="form-control" id="sellQty" placeholder="1"
+                                   disabled="@(Model.isSell == true && Model.SellUOM != Model.UOM ?null:"disabled")">
+                            <span asp-validation-for="SellQty" class="text-danger">Qty is Required</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <div class="form-check">
+                                <input asp-for="isPurchase" class="form-check-input" type="checkbox" id="isPurchase" onchange="enablePurchase(this)">
+                                <label class="form-check-label" for="isPurchase">
+                                    Purchase
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="purchasePrice">Price</label>
+                            <input asp-for="PurchasePrice" type="number" class="form-control" id="purchasePrice" placeholder="0"
+                                   disabled="@(Model.isPurchase == true?null:"disabled")">
+                            <span asp-validation-for="PurchasePrice" class="text-danger">Price is Required</span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="purchaseUOM">UOM</label>
+                            <input asp-for="PurchaseUOM" type="text" class="form-control" id="purchaseUOM" placeholder="Pcs"
+                                   disabled="@(Model.isPurchase == true?null:"disabled")" onkeyup="checkUOM(this,'purchase')">
+                            <span asp-validation-for="PurchaseUOM" class="text-danger">UOM is Required</span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="purchaseQty">Qty</label>
+                            <input asp-for="PurchaseQty" type="text" class="form-control" id="purchaseQty" placeholder="1"
+                                   disabled="@(Model.isPurchase == true && Model.PurchaseUOM != Model.UOM ?null:"disabled")">
+                            <span asp-validation-for="PurchaseQty" class="text-danger">Qty is Required</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--Modal Footer Start-->
+        <div class="modal-footer">
+            <button type="reset" data-dismiss="modal" id="cancel" class="btn btn-default" type="button">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="btnSubmitCreate">@ViewBag.ButtonText</button>
+        </div>
+        <!--Modal Footer End-->
+    </form>
+</div>
+<style>
+    span.text-danger {
+        display: none;
+        color: red;
+        font-size: 90%;
+    }
+</style>
+
+@section Scripts {
+    <script>
+
+    </script>
+}
+

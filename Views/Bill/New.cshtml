@@ -1,0 +1,314 @@
+﻿@model Anastock.Models.Bill
+@{
+    ViewData["Title"] = "New Bill";
+    ViewBag.reloadVendor = "false";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Create Bill</strong>
+            </div>
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @if (Model.LinkedPOId.HasValue)
+                            {
+                                @Html.Hidden("PurchaseOrderId", Model.LinkedPOId)
+                            }
+                            else
+                            {
+                                @Html.Hidden("PurchaseOrderId", "00000000-0000-0000-0000-000000000000")
+                            }
+
+                            <label asp-for="Vendor" class="col-md-4 col-form-label text-left text-muted"></label>
+                            @Html.DropDownListFor(m => m.VendorId,
+                                      new SelectList(ViewBag.ListofVendor, "VendorId", "VendorName"), new { @class = "customer form-control", id = "Vendor", @onchange = "LoadBillingAddress(this)" })
+                            <span asp-validation-for="Vendor" class="error text-danger">* Vendor required</span>
+                        </div>
+                        <div class="form-group" id="BillingAddress">
+                            <input id="billAddrId" type="hidden" value="@Model.VendorAddressId" />
+
+                            @if (Model.LinkedPOId.HasValue)
+                            {
+                                <label id="billAddrHdr" class="col-md-8 col-form-label text-left text-muted">Billing Address</label>
+                            }
+                            else
+                            {
+                                <label id="billAddrHdr" class="col-md-8 col-form-label text-left text-muted"></label>
+                            }
+
+                            <label id="billAddrVal" class="col-md-8 col-form-label text-left">
+                                @if (Model.LinkedPOId.HasValue)
+                                {
+                                    @Model.VendorAddress.BillingAddress <br /> @Model.VendorAddress.BillingCountry
+                                }
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label asp-for="BillNo" class="col-md-4 col-form-label text-right text-muted"></label>
+                            <input id="BillNo" asp-for="BillNo" class="col-md-8 form-control" value="@ViewBag.AutoNumber" placeholder="@ViewBag.AutoNumber" />
+                            <span asp-validation-for="BillNo" class="error text-danger offset-md-4 offset-lg-4 offset-sm-0">* Bill No required</span>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="VendorInvoiceNo" class="col-md-4 col-form-label text-right text-muted"></label>
+                            <input id="VendorInvoiceNo" asp-for="VendorInvoiceNo" class="col-md-8 form-control" />
+                        </div>
+                        <div class="form-group row">
+                            <div class="input-group date" id="issueDate">
+                                <label asp-for="IssueDate" class="col-md-4 col-form-label text-right text-muted"></label>
+                                <input id="IssueDate" asp-for="IssueDate" style="width:100%;" class="IssueDate col-md-8 form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                <span asp-validation-for="IssueDate" class="error text-danger offset-md-4 offset-lg-4 offset-sm-0">* Issue Date required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="input-group" id="paymentTerm">
+                                <label asp-for="PaymentTerm" class="col-md-4 col-form-label text-right text-muted"></label>
+                                <select id="PaymentTerm" asp-for="PaymentTerm" style="width:100%;" class="col-md-8 form-control" onchange="paymenttermChanged(this)">
+                                    <option label="Select Term" value="0">Select Term</option>
+                                    <option label="After Days" value="Days">After Days</option>
+                                    <option label="Prepaid" value="Prepaid">Prepaid</option>
+                                    <option label="C.O.D" value="COD">C.O.D</option>
+                                </select>
+                                <span asp-validation-for="PaymentTerm" class="error text-danger offset-md-4 offset-lg-4 offset-sm-0">* Payment Term Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row" id="paymentTermValueDiv">
+                            <div class="input-group" id="PaymentTermValue">
+                                <label class="col-md-4 col-form-label text-right text-muted">Days</label>
+                                <input id="paymentTermValue" asp-for="PaymentTermValue" style="width:100%;" class="col-md-8 form-control" onchange="calculateDueDate(this)">
+                                <span asp-validation-for="PaymentTermValue" class="error text-danger offset-md-4 offset-lg-4 offset-sm-0">* Days Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="input-group date" id="dueDate">
+                                <label asp-for="DueDate" class="col-md-4 col-form-label text-right text-muted small"></label>
+                                <input id="DueDate" asp-for="DueDate" style="width:100%;" class="DueDate col-md-8 form-control duedatevalue" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                <span asp-validation-for="DueDate" class="error text-danger offset-md-4 offset-lg-4 offset-sm-0">* Due Date required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="Status" class="col-md-4 col-form-label text-right text-muted"></label>
+                            <select id="Status" asp-for="Status" class="col-md-8 form-control">
+                                <option label="Open" value="Open">Open</option>
+                                <option label="On Progress" value="On Progress">On Progress</option>
+                            </select>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-sm table-responsive-sm" style="width:100%;">
+                            <tr>
+                                <th class="text-sm-left text-muted text-black-50">Item</th>
+                                <th class="text-sm-right text-muted text-black-50">Description</th>
+                                <th class="text-sm-right text-muted text-black-50">Quantity</th>
+                                <th class="text-sm-right text-muted text-black-50">UOM</th>
+                                <th class="text-sm-right text-muted text-black-50">Unit Price</th>
+                                <th class="text-sm-right text-muted text-black-50">Discount (%)</th>
+                                <th class="text-sm-right text-muted text-black-50">Amount ($)</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                            <tr id="tablebody">
+                                <td>
+                                    <select id="productline" class="productline form-control" onchange="LoadProductData(this)">
+                                        <option>Select</option>
+                                    </select>
+                                    <span class="error">Select item</span>
+                                </td>
+                                <td>
+                                    <input type="text" id="descriptionline" value="" class="descriptionline form-control text-right" />
+                                </td>
+                                <td>
+                                    <input type="text" id="quantityline" value="0" class="quantityline form-control text-right" />
+                                    <span class="error">Quantity required</span>
+                                </td>
+                                <td>
+                                    <input type="text" id="uomline" value="" class="uomline form-control text-right" disabled="disabled" />
+                                    <span class="error">UOM required</span>
+                                </td>
+                                <td>
+                                    <input type="text" id="unitpriceline" value="0.00" class="unitpriceline form-control text-right" />
+                                    <span class="error">Unit price required</span>
+                                </td>
+                                <td>
+                                    <input type="text" id="discountline" value="0" class="discountline form-control text-right" />
+                                </td>
+                                <td>
+                                    <input type="text" id="amountline" value="0.00" class="amountline form-control text-right" />
+                                    <span class="error">Amount required</span>
+                                </td>
+                                <td style="text-align:center;">
+                                    @*<input type="button" id="add" style="width:40px;" class="btn btn-sm btn-info fa fa-plus-circle" />*@
+                                    <button id="addline" class="btn btn-sm btn-info">
+                                        <span id="falineIcon" class="fa fa-plus-circle"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                        <div id="orderItems">
+                            <table class="table table-responsive" id="orderdetailsItems">
+                                <tbody>
+                                    @if (Model.LinkedPOId.HasValue)
+                                    {
+
+                                        @foreach (var item in Model.BillDetails)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <input type="hidden" class="Billdetailsid" value="@item.BillDetailsId">
+                                                    @Html.DropDownListFor(i => @item.ProductAndServiceId,
+                                                 new SelectList(ViewBag.ProductList, "Id", "Name"), new { @class = "productline form-control" })
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="descriptionline form-control text-right" value="@item.Description" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="quantityline form-control text-right" value="@item.Qty" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="uomline form-control text-right" value="@item.UOM" />
+                                                </td>
+                                                <td>
+                                                    <input type="text" value="@item.UnitPrice" class="unitpriceline form-control text-right">
+
+                                                </td>
+                                                <td>
+                                                    <input type="text" value="@item.DiscountPercent" class="discountline form-control text-right">
+                                                </td>
+                                                <td>
+                                                    <input type="text" value="@item.Total" class="amountline form-control text-right">
+
+                                                </td>
+                                                <td style="text-align:center;">
+                                                    <button class="btn btn-sm remove btn-danger" value="Remove">
+                                                        <svg id="falineIcon" class="svg-inline--fa fa-w-16 fa-times-circle" aria-hidden="true" focusable="false" data-prefix="fa" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"></path></svg><!-- <span id="falineIcon" class="fa fa-plus-circle"></span> Font Awesome fontawesome.com -->
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                            <span id="orderItemError" style="color:red"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="VendorNotes" class="col-md-12 col-form-label text-left text-muted"></label>
+                            <textarea id="vendorNotes" asp-for="VendorNotes" class="col-md-12 form-control" rows="3" maxlength="200"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        @if (Model.LinkedPOId.HasValue)
+                        {
+                            <div class="form-group row" style="margin-bottom:0px !important;">
+                                <label class="col-md-9 col-form-label text-right text-muted">Subtotal</label>
+                                <label id="subtotal" class="col-md-3 col-form-label text-center">@Model.SubTotal</label>
+                            </div>
+                            <div class="form-group row" style="margin-bottom:0px !important;">
+                                <label asp-for="DiscountValue" class="col-form-label text-right text-muted col-md-5 m-1"></label>
+                                <select id="DiscountType" asp-for="DiscountType" class="form-control col-md-3 m-1" onchange="discountChange(this)">
+                                    <option label="Select Type" value="0">Select Type</option>
+                                    <option label="Percent (%)" value="Percent"></option>
+                                    <option label="Value" value="Value"></option>
+                                </select>
+                                <input id="DiscountValue" asp-for="DiscountValue" class="form-control col-md-3 m-1 text-right" onchange="updateFinalAmounts()" />
+                                <div class="col-md-5"></div>
+                                <span asp-validation-for="DiscountValue" class="error text-danger text-right"></span>
+                            </div>
+                            <div class="form-group row totalDiscount" style="margin-bottom:0px !important;">
+                                <label class="col-md-9 col-form-label text-right text-muted ">Discount</label>
+                                <label id="discountTotal" class="col-md-3 col-form-label text-center">
+                                    @(Model.DiscountType == "Percent"?
+        ((Model.DiscountValue/100)*Model.SubTotal)
+        : null)
+                                </label>
+                            </div>
+                            <div class="form-group row" style="margin-bottom:0px !important;">
+                                <input id="grandtotal" type="hidden" value="@Model.Total" />
+                                <label class="col-md-9 col-form-label text-right text-muted">Total</label>
+                                <label id="total" class="col-md-3 col-form-label text-center">@Model.Total</label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group row" style="margin-bottom:0px !important;">
+                                <label class="col-md-9 col-form-label text-right text-muted">Subtotal</label>
+                                <label id="subtotal" class="col-md-3 col-form-label text-center">$0.00</label>
+                            </div>
+                            <div class="form-group row" style="margin-bottom:0px !important;">
+                                <label asp-for="DiscountValue" class="col-form-label text-right text-muted col-md-5 m-1"></label>
+                                <select id="DiscountType" asp-for="DiscountType" class="form-control col-md-3 m-1" onchange="discountChange(this)">
+                                    <option label="Select Type" value="0">Select Type</option>
+                                    <option label="Percent (%)" value="Percent"></option>
+                                    <option label="Value" value="Value"></option>
+                                </select>
+                                <input id="DiscountValue" asp-for="DiscountValue" class="form-control col-md-3 m-1 text-right" onchange="updateFinalAmounts()" />
+                                <div class="col-md-5"></div>
+                                <span asp-validation-for="DiscountValue" class="error text-danger text-right"></span>
+                            </div>
+                            <div class="form-group row totalDiscount" style="margin-bottom:0px !important;">
+                                <label class="col-md-9 col-form-label text-right text-muted ">Discount</label>
+                                <label id="discountTotal" class="col-md-3 col-form-label text-center">$0.00</label>
+                            </div>
+                            <div class="form-group row" style="margin-bottom:0px !important;">
+                                <input id="grandtotal" type="hidden" />
+                                <label class="col-md-9 col-form-label text-right text-muted">Total</label>
+                                <label id="total" class="col-md-3 col-form-label text-center">$0.00</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div style="padding:10px 0;" class="float-right">
+                            <input id="cancel" type="button" value="Cancel" class="btn btn-outline-dark btn-sm" style="width:70px;" />
+                            <input id="submit" type="button" value="Save" class="btn btn-success btn-sm" style="min-width:70px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*CREATE EDIT MODAL*@
+<div aria-hidden="true" role="dialog" tabindex="-1" id="modalCreateEditVendor" class="modal fade">
+    <div class="modal-dialog modal-lg" role="document" id="modalDialogVendor">
+        @Html.Partial("~/Views/Vendor/CreateEdit.cshtml", new VendorViewModel());
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/bill.js" asp-append-version="true"></script>
+    <script src="~/js/vendor.js" asp-append-version="true"></script>
+    <script>
+         var reloadVendor = '@ViewBag.reloadVendor';
+    </script>
+}
+<style>
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 90%;
+    }
+
+    tr.error {
+        background-color: rgba(255,0,0,0.35);
+    }
+</style>

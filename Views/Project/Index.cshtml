@@ -1,0 +1,135 @@
+﻿@model IEnumerable<Anastock.Models.Project>
+
+@{
+    ViewData["Title"] = "Project";
+    ViewBag.reloadCustomer = "false";
+    ViewBag.reloadProject = "true";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Project</strong>
+            </div>
+            <div class="card-body">
+
+                <a class="btn btn-sm btn-primary float-right popup" asp-action="New" data-toggle="modal" data-target="#modalCreateEditProject" id="btnNewProject">Create Project</a>
+                <br />
+                <br />
+
+
+                <table id="tbProject" class="tbProject table table-responsive-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProjectNo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Title)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.InstallationDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.QuoteNo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ProjectNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Title)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.InstallationDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.QuoteNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="fa fa-sm fa-ellipsis-v"></span>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a asp-controller="Project" asp-action="Edit" asp-route-id="@item.ProjectId" class="dropdown-item text-muted popup" data-toggle="modal" data-target="#modalCreateEditProject" id="btnEditProject"><span class='fa fa-edit'></span> Edit</a>
+                                            <a asp-controller="Project" asp-action="delete" asp-route-id="@item.ProjectId" class="dropdown-item text-muted"
+                                               onclick="return confirm ('Are you sure want to delete this Project?');"><span class='fa fa-trash-alt'></span> Delete</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*CREATE EDIT MODAL*@
+<div aria-hidden="true" role="dialog" tabindex="-1" id="modalCreateEditProject" class="modal fade" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document" id="modalDialogPS">
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/project.js"></script>
+    <script src="~/js/customer.js"></script>
+    <script>
+        var table = $('#tbProject');
+        var reloadCustomer = '@ViewBag.reloadCustomer';
+        var reloadProject = '@ViewBag.reloadProject';
+
+        $(document).ready(function () {
+            table = table.DataTable({
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false,
+                }]
+            });
+        });
+
+        $(".popup").click(function (e) {
+            var url = $(this).attr('href');
+            ModalCreateEditProject(url);
+        });
+
+        function ModalCreateEditProject(url) {
+            $.get(url).done(function (data) {
+                debugger;
+                $('#modalCreateEditProject').find(".modal-dialog").html(data);
+                $('#modalCreateEditProject > .modal', data).modal("show");
+            });
+        }
+
+
+    </script>
+}
+
+<style>
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 90%;
+    }
+
+    tr.error {
+        background-color: rgba(255,0,0,0.35);
+    }
+</style>

@@ -1,0 +1,61 @@
+﻿@model PaymentMethod;
+
+@{
+    Layout = null;
+}
+
+<div class="modal-content" id="modalContent">
+    <form enctype="multipart/form-data" asp-controller="PaymentMethod" asp-action="CreateEdit" method="post" class="mt-3"
+          id="formCreatePM" name="formCreatePM" onsubmit="SubmitFormCreateEdit(this); return false;">
+        <!--Modal Header Start-->
+        <!--Modal Header End-->
+        <div class="modal-header">
+            <h4 class="modal-title">@ViewBag.ModalTitle</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body">
+            @Html.HiddenFor(model => model.PaymentMethodId)
+            <input type="hidden" id="hdfPMId">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <label asp-for="Description" class="col-sm-4 col-form-label"></label>
+                        <div class="col-sm-6">
+                            <input asp-for="Description" class="form-control" placeholder="Name" id="tbDescription">
+                            <span asp-validation-for="Description" class="text-danger">Description is Required</span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="AccountNumber" class="col-sm-4 col-form-label"></label>
+                        <div class="col-sm-6">
+                            <input asp-for="AccountNumber" class="form-control" placeholder="Account Number" id="tbAccountNumber">
+                            <span asp-validation-for="AccountNumber" class="text-danger">Account Number is Required</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--Modal Footer Start-->
+        <div class="modal-footer">
+            <button type="reset" data-dismiss="modal" id="cancel" class="btn btn-default" type="button">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="btnSubmitCreate">@ViewBag.ButtonText</button>
+        </div>
+        <!--Modal Footer End-->
+    </form>
+</div>
+<style>
+    span.text-danger {
+        display: none;
+        color: red;
+        font-size: 90%;
+    }
+</style>
+
+@section Scripts {
+    <script>
+
+    </script>
+}
+

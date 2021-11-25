@@ -1,0 +1,186 @@
+﻿@model IEnumerable<Anastock.Models.Invoice>
+
+@{
+    ViewData["Title"] = "Invoice";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Invoice</strong>
+            </div>
+            <div class="card-body">
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="pill" href="#invoice" role="tab" aria-controls="pills-invoice" aria-selected="true">Invoice</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="pill" href="#quote" role="tab" aria-controls="pills-quote" aria-selected="false">Quote</a>
+                    </li>
+                </ul>
+                <div class="tab-content mt-3">
+                    <div class="tab-pane fade show active" id="invoice" role="tabpanel" aria-labelledby="invoice-tab">
+                        <a class="btn btn-sm btn-primary float-right" asp-action="New">Create Invoice</a>
+                        <br />
+                        <br />
+
+
+                        <table id="tbInvoice" class="tbInvoice table table-responsive-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.IssueDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.InvoiceNo)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.CustomerPONo)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Total)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.BalanceDue)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.DueDate)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Status)
+                                    </th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IssueDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.InvoiceNo)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CustomerPONo)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Total)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.BalanceDue)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DueDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Status)
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span class="fa fa-sm fa-ellipsis-v"></span>
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <a asp-controller="Invoice" asp-action="Edit" asp-route-id="@item.InvoiceId" class="dropdown-item text-muted"><span class='fa fa-edit'></span> Edit</a>
+                                                    @if (item.Status == "Pending" || item.Status == "Partial")
+                                                    {
+                                                        <a id="payment" asp-controller="InvoiceReceivable" asp-action="New" asp-route-id="@item.InvoiceId" class="dropdown-item text-muted"><span class='fa fa-receipt'></span> Create payment</a>
+                                                    }
+                                                    <a asp-controller="Invoice" asp-action="GeneratePdf" asp-route-id="@item.InvoiceId" class="dropdown-item text-muted"><span class='fa fa-file-pdf'></span> Generate Pdf</a>
+                                                    <a asp-controller="Invoice" asp-action="delete" asp-route-id="@item.InvoiceId" class="dropdown-item text-danger"
+                                                       onclick="return confirm ('Are you sure want to delete this Invoice?');"><span class='fa fa-trash-alt'></span> Delete</a>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="quote" role="tabpanel" aria-labelledby="quote-tab">
+                        <table id="tbQuote" class="tbQuote table table-responsive-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Quote Number
+                                    </th>
+                                    <th>
+                                        Customer PO No
+                                    </th>
+                                    <th>
+                                        Issue Date
+                                    </th>
+                                    <th>
+                                        Expiry Date
+                                    </th>
+                                    <th>
+                                        Total
+                                    </th>
+                                    <th>
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                @foreach (var item in ViewBag.WonQuoteList)
+                                {
+                                    <tr>
+                                        <td>
+                                            @item.QuoteNo
+                                        </td>
+                                        <td>
+                                            @item.CustomerPONo
+                                        </td>
+                                        <td>
+                                            @item.IssueDate
+                                        </td>
+                                        <td>
+                                            @item.ExpiryDate
+                                        </td>
+                                        <td>
+                                            @item.Total
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span class="fa fa-sm fa-ellipsis-v"></span>
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <a asp-controller="Invoice" asp-action="New" asp-route-id="@item.QuoteId" class="dropdown-item text-muted"><span class="fa fa-file-invoice"></span> Create Invoice</a>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    <script>
+        var table = $('#tbInvoice');
+
+        $(document).ready(function () {
+            table = table.DataTable({
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false,
+                }]
+            });
+        });
+
+    </script>
+}

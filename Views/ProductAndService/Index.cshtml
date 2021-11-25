@@ -1,0 +1,395 @@
+﻿@model IEnumerable<ProductAndService>
+
+@{
+    ViewBag.Title = "Product/Service List";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Product/Service</strong>
+            </div>
+            <div class="card-body">
+
+                <a asp-action="Create" class="btn btn-sm btn-primary m-1 popup float-right" data-toggle="modal" data-target="#modalCreateEditPS" id="btnNewPS">
+                    <i class="fa fa-plus"></i> New
+                </a>
+                <table id="dtPS" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Product/Service Name</th>
+                            <th>Category</th>
+                            <th>Sell</th>
+                            <th>Sell Price</th>
+                            <th>Sell UOM</th>
+                            <th>Purchase</th>
+                            <th>Purchase Price</th>
+                            <th>Purchase UOM</th>
+                            <th class="no-sort">Active</th>
+                            <th class="no-sort">Action</th>
+                        </tr>
+                    </thead>
+                    @foreach (var ps in Model)
+                    {
+                        <tr>
+                            <td>@ps.Name</td>
+                            @if (ps.CategoryId == 1)
+                            {
+                                <td>Product</td>
+                            }
+                            else
+                            {
+                                <td>Service</td>
+                            }
+                            @if (ps.isSell)
+                            {
+                                <td>
+                                    <input class="form-check-inline" type="checkbox" checked="checked" disabled="disabled">
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <input class="form-check-inline" type="checkbox" disabled="disabled">
+                                </td>
+                            }
+                            <td>@ps.SellPrice</td>
+                            <td>@ps.SellUOM</td>
+                            @if (ps.isPurchase)
+                            {
+                                <td>
+                                    <input class="form-check-inline" type="checkbox" checked="checked" disabled="disabled">
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <input class="form-check-inline" type="checkbox" disabled="disabled">
+                                </td>
+                            }
+                            <td>@ps.PurchasePrice</td>
+                            <td>@ps.PurchaseUOM</td>
+                            @if (ps.isActive)
+                            {
+                                <td>
+                                    <input class="form-check-inline" type="checkbox" checked="checked" disabled="disabled">
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <input class="form-check-inline" type="checkbox" disabled="disabled">
+                                </td>
+                            }
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="fa fa-sm fa-ellipsis-v"></span>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a asp-action="Edit" asp-route-psId="@ps.Id" class="dropdown-item text-muted m-1 popup" data-toggle="modal" data-target="#modalCreateEditPS" id="btnEditPS">
+                                        <span class='fa fa-edit'></span> Edit
+                                    </a>
+                                    <button type="button" class="dropdown-item text-muted m-1" data-toggle="modal" data-target="modal_@ps.Id"
+                                            id="btnDeletePopUp" onclick="javascript: modalDelete('@ps.Id', '@ps.Name');">
+                                        <span class='fa fa-trash-alt'></span> Delete
+                                    </button>
+                                </div>
+                            </div>
+                            
+
+                        </td>
+                        </tr>
+                    }
+
+
+
+                </table>
+
+                @*CREATE EDIT MODAL*@
+                <div aria-hidden="true" role="dialog" tabindex="-1" id="modalCreateEditPS" class="modal fade">
+                    <div class="modal-dialog modal-lg" role="document" id="modalDialogPS">
+
+                    </div>
+                </div>
+
+                @*DELETE MODAL*@
+                <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form enctype="multipart/form-data" asp-controller="ProductAndService" asp-action="Delete" method="post" class="mt-3"
+                                  id="formCreatePS" name="formCreatePS" onsubmit="SubmitFormDelete(this); return false;">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="myModalLabel">Delete Confirmation</h4>
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+                                </div>
+                                <input type="hidden" id="hdfPSId" />
+                                <div class="modal-body">
+                                    <p id="lblDelete"></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button id="btnDelete" type="submit" class="btn btn-danger mr-1">Delete</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script>
+        var table = $('#dtPS');
+
+        $(document).ready(function () {
+            table = $('#dtPS').DataTable({
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false,
+                }]
+            });
+        });
+
+        $(".popup").click(function (e) {
+            var url = $(this).attr('href');
+            modalCreateEdit(url);
+        });
+
+        function refreshUOM(uom) {
+            $('#sellUOM').val($(uom).val());
+            $('#purchaseUOM').val($(uom).val());
+        }
+
+        function modalCreateEdit(url) {
+            $('#hdfPSId').val('0');
+            $.get(url).done(function (data) {
+                debugger;
+                $.validator.unobtrusive.parse('#modalCreateEditPS');
+                $('#modalCreateEditPS').find(".modal-dialog").html(data);
+                $('#modalCreateEditPS > .modal', data).modal("show");
+            });
+        };
+
+        function modalDelete(psId, psName) {
+            $('#hdfPSId').val(psId);
+            bootbox.confirm({
+                size: "large",
+                message: "Delete Product/Service [" + psName + "]?",
+                callback: function (result) { /* result is a boolean; true = OK, false = Cancel*/
+                    if (result) {
+                        var vendorId = $('#hdfPSId').val();
+                        var url = "/ProductAndService/Delete";
+
+                        SubmitFormDelete(url, vendorId);
+                    }
+                }
+            })
+        };
+
+        function SubmitFormCreateEdit(form) {
+            var isValid = true;
+            var name = $('#tbName');
+            var is = $("#isSell");
+            var sp = $('#sellPrice');
+            var su = $('#sellUOM');
+            var sq = $('#sellQty');
+            var ip = $("#isPurchase");
+            var pp = $('#purchasePrice');
+            var pu = $('#purchaseUOM');
+            var pq = $('#purchaseQty');
+            var uom = $('#tbUOM');
+            
+            if (name.val().trim() == '') {
+                name.siblings('span').css('display', 'inline-block');
+                isValid = false;
+            }
+            else {
+                name.siblings('span').css('display', 'none');
+            }
+
+            if (uom.val().trim() == '') {
+                uom.siblings('span').css('display', 'inline-block');
+                isValid = false;
+            }
+            else {
+                uom.siblings('span').css('display', 'none');
+            }
+
+            if (is.is(':checked')) {
+                if (sp.val() == '') {
+                    sp.siblings('span').css('display', 'inline-block');
+                    isValid = false;
+                }
+                else {
+                    sp.siblings('span').css('display', 'none');
+                }
+                if (su.val() == '') {
+                    su.siblings('span').css('display', 'inline-block');
+                    isValid = false;
+                }
+                else {
+                    su.siblings('span').css('display', 'none');
+                }
+
+                if (sq.val <= 0) {
+                    sq.siblings('span').css('display', 'inline-block');
+                    isValid = false;
+                }
+                else {
+                    sq.siblings('span').css('display', 'none');
+                }
+            }
+
+            if (ip.is(':checked')) {
+                if (pp.val() == '') {
+                    pp.siblings('span').css('display', 'inline-block');
+                    isValid = false;
+                }
+                else {
+                    pp.siblings('span').css('display', 'none');
+                }
+                if (pu.val() == '') {
+                    pu.siblings('span').css('display', 'inline-block');
+                    isValid = false;
+                }
+                else {
+                    pu.siblings('span').css('display', 'none');
+                }
+
+                if (pq.val <= 0) {
+                    pq.siblings('span').css('display', 'inline-block');
+                    isValid = false;
+                }
+                else {
+                    pq.siblings('span').css('display', 'none');
+                }
+            }
+            
+            if (isValid) {
+                var url = form.action;
+                console.log($(form).serialize());
+                $.ajax({
+                    url: url,
+                    type: 'post',
+                    data: $(form).serialize(),
+                    success: function (data) {
+                        $('#modalCreateEditPS').modal("hide");
+                        bootbox.alert(data.message, function () {
+                            location.reload();
+                        });
+                    }
+                });
+            }
+            return false;
+        };
+
+        function SubmitFormDelete(url, psId) {
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: { id: psId },
+                success: function (data) {
+                    bootbox.alert(data.message, function () {
+                        location.reload();
+                    });
+                }
+            });
+
+            return false;
+        };
+
+        function enableSell(check) {
+            check.value = check.checked;
+
+            if (check.checked) {
+                $('#sellPrice').val('');
+                $('#sellUOM').val($('#tbUOM').val());
+                $('#sellQty').val('');
+                $('#sellPrice').attr('disabled', false);
+                $('#sellUOM').attr('disabled', false);
+                if ($('#tbUOM').val() != $('#sellUOM').val()) {
+                    $('#purchaseQty').attr('disabled', false);
+                }
+            }
+            else {
+                $('#sellPrice').val('');
+                $('#sellUOM').val('');
+                $('#sellQty').val('');
+                $('#sellPrice').attr('disabled', true);
+                $('#sellUOM').attr('disabled', true);
+                $('#sellQty').attr('disabled', true);
+            }
+
+        }
+
+        function enablePurchase(check) {
+            check.value = check.checked;
+
+            if (check.checked) {
+                $('#purchasePrice').val('');
+                $('#purchaseUOM').val($('#tbUOM').val());
+                $('#purchaseQty').val('');
+                $('#purchasePrice').attr('disabled', false);
+                $('#purchaseUOM').attr('disabled', false);
+                if ($('#tbUOM').val() != $('#purchaseUOM').val()) {
+                    $('#purchaseQty').attr('disabled', false);
+                }
+            }
+            else {
+                $('#purchasePrice').val('');
+                $('#purchaseUOM').val('');
+                $('#purchaseQty').val('');
+                $('#purchasePrice').attr('disabled', true);
+                $('#purchaseUOM').attr('disabled', true);
+                $('#purchaseQty').attr('disabled', true);
+            }
+
+        }
+
+        function checkUOM(uom,type) {
+            var defaultUOM = $('#tbUOM').val();
+
+            var thisUOM = $(uom).val();
+
+            if (type == 'sell') {
+                if (thisUOM == defaultUOM) {
+                    $('#sellQty').val(1);
+                    $('#sellQty').attr('disabled', true);
+                }
+                else {
+                    $('#sellQty').attr('disabled', false);
+                }
+            }
+            else {
+                if (thisUOM == defaultUOM) {
+                    $('#purchaseQty').val(1);
+                    $('#purchaseQty').attr('disabled', true);
+                }
+                else {
+                    $('#purchaseQty').attr('disabled', false);
+                }
+            }
+
+        }
+
+        function checkAllUOM() {
+            var isSell = $('#isSell');
+            var isPurc = $('#isPurchase');
+
+            if (isSell.is(':checked')) {
+                checkUOM($('#sellUOM'), 'sell');
+            }
+
+            if (isPurc.is(':checked')) {
+                checkUOM($('#purchaseUOM'), 'purchase');
+            }
+            
+        }
+    </script>
+}

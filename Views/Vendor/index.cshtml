@@ -1,0 +1,119 @@
+﻿@model IEnumerable<Vendor>
+
+@{
+    ViewBag.Title = "Vendor";
+    ViewBag.reloadVendor = "true";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Vendor</strong>
+            </div>
+            <div class="card-body">
+
+                <a asp-action="Create" class="btn btn-sm btn-primary m-1 popup float-right" data-toggle="modal" data-target="#modalCreateEditVendor" id="btnNewVendor">
+                    <i class="fa fa-plus"></i> New
+                </a>
+                <input type="hidden" id="hdfVendorId" />
+                <table id="dtVendor" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Vendor Name</th>
+                            <th>Vendor Email</th>
+                            <th>Description</th>
+                            <th>Website</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    @foreach (var Vendor in Model)
+                    {
+                        <tr>
+                            <td>@Vendor.VendorName</td>
+                            <td>@Vendor.VendorEmail</td>
+                            <td>@Vendor.Description</td>
+                            <td>@Vendor.Website</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="fa fa-sm fa-ellipsis-v"></span>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a asp-action="Edit" asp-route-VendorId="@Vendor.VendorId" class="dropdown-item text-muted m-1 popup" data-toggle="modal" data-target="#modalCreateEditVendor" id="btnEditVendor">
+                                            <span class='fa fa-edit'></span> Edit
+                                        </a>
+                                        <button type="button" class="dropdown-item text-muted m-1"
+                                                id="btnDeletePopUp" onclick="javascript: modalDelete('@Vendor.VendorId', '@Vendor.VendorName');">
+                                            <span class='fa fa-trash-alt'></span> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                                
+
+                            </td>
+                        </tr>
+                    }
+
+
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*CREATE EDIT MODAL*@
+<div aria-hidden="true" role="dialog" tabindex="-1" id="modalCreateEditVendor" class="modal fade">
+    <div class="modal-dialog modal-lg" role="document" id="modalDialogVendor">
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/js/vendor.js"></script>
+
+    <script>
+        var table = $('#dtVendor');
+        var reloadVendor = "@ViewBag.reloadVendor";
+
+        $(document).ready(function () {
+            table = $('#dtVendor').DataTable();
+        });
+
+        $(".popup").click(function (e) {
+            var url = $(this).attr('href');;
+            modalCreateEdit(url);
+        });
+
+        function modalCreateEdit(url) {
+            $('#hdfVendorId').val('0');
+            $.get(url).done(function (data) {
+                debugger;
+                $.validator.unobtrusive.parse('#modalCreateEditVendor');
+                $('#modalCreateEditVendor').find(".modal-dialog").html(data);
+                $('#modalCreateEditVendor > .modal', data).modal("show");
+            });
+        };
+
+        
+
+        function modalDelete(vendorId, vendorName) {
+            $('#hdfVendorId').val(vendorId);
+            bootbox.confirm({
+                size: "large",
+                message: "Delete Vendor [" + vendorName + "]?",
+                callback: function (result) { /* result is a boolean; true = OK, false = Cancel*/
+                    if (result) {
+                        var vendorId = $('#hdfVendorId').val();
+                        var url = "/Vendor/Delete";
+
+                        SubmitFormDelete(url, vendorId);
+                    }
+                }
+            })
+        };
+
+    </script>
+}

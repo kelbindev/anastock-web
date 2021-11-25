@@ -1,0 +1,106 @@
+﻿@model IEnumerable<Anastock.Models.Quote>
+
+@{
+    ViewData["Title"] = "Quote";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Quote</strong>
+            </div>
+            <div class="card-body">
+                <a class="btn btn-sm btn-primary float-right" asp-action="New">Create Quote</a>
+                <br />
+                <br />
+
+
+                <table id="tbQuote" class="tbQuote table table-responsive-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.QuoteNo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CustomerPONo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.IssueDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ExpiryDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Total)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.QuoteNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CustomerPONo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IssueDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ExpiryDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Total)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="fa fa-sm fa-ellipsis-v"></span>
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a asp-controller="Quote" asp-action="Edit" asp-route-id="@item.QuoteId" class="dropdown-item text-muted"><span class='fa fa-edit'></span> Edit</a>
+                                            @if (item.Status == "New" || item.Status == "Won")
+                                            {
+                                                <a asp-controller="Invoice" asp-action="new" asp-route-id="@item.QuoteId" class="dropdown-item text-muted"><span class='fa fa-file-invoice'></span> Convert to Invoice</a>
+                                            }
+                                            <a asp-controller="Quote" asp-action="GeneratePdf" asp-route-id="@item.QuoteId" class="dropdown-item text-muted"><span class='fa fa-file-pdf'></span> Generate Pdf</a>
+                                            <a asp-controller="Quote" asp-action="delete" asp-route-id="@item.QuoteId" class="dropdown-item text-danger"
+                                               onclick="return confirm ('Are you sure want to delete this Quote?');"><span class='fa fa-trash-alt'></span> Delete</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        var table = $('#tbQuote');
+
+        $(document).ready(function () {
+            table = table.DataTable({
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false,
+                }]
+            });
+        });
+
+    </script>
+}

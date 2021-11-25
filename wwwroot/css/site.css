@@ -1,0 +1,142 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+    color: #0366d6;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.border-top {
+    border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+
+/*.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;*/ /* Vertically center the text there */
+/*}*/
+
+.logo-img {
+    width: 75px;
+/*    height: 75px;*/
+    align-self: center;
+    margin-bottom: 30px;
+}
+
+.menu-item-image {
+    width: 20px;
+    height: 20px;
+    align-self: center;
+}
+
+.item-summary-total {
+    border: none;
+    text-align: right;
+    margin-bottom: .8rem;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.item-summary-title {
+    padding-right: 1.6rem;
+}
+
+.search {
+    width: 100%;
+    position: relative;
+    display: flex;
+}
+
+.searchTerm {
+    width: 100%;
+    border: 1px solid;
+    border-right: none;
+    padding: 5px;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+    color: #9DBFAF;
+}
+
+    .searchTerm:focus {
+        color: #00B4CC;
+    }
+
+.searchButton {
+    border: 1px solid #00B4CC;
+    background: #00B4CC;
+    color: #fff;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.search input{
+    font-size:14px
+}
+
+.navbar-collapse ul li button {
+    font-size: 16px;
+    background: #cad2de;
+    border-radius:12px;
+   
+}
+
+.modal {
+    overflow: auto !important;
+}

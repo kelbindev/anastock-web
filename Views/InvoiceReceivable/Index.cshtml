@@ -1,0 +1,90 @@
+﻿@model IEnumerable<Anastock.ViewModel.InvoiceReceivableViewModel>
+
+@{
+    ViewData["Title"] = "Invoice Receivable";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Invoice Receivable</strong>
+            </div>
+            <div class="card-body">
+                <a class="btn btn-sm btn-primary float-right" asp-action="New">Create Invoice Payment</a>
+                <br />
+                <br />
+
+
+                <table id="tbInvoice" class="tbInvoicePayment table table-responsive-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.InvoiceNo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PaymentDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PaymentName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ReferenceNo)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.Description)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.AmountReceived)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.InvoiceNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PaymentDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PaymentName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ReferenceNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.AmountReceived)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        var table = $('#tbInvoice');
+
+        $(document).ready(function () {
+            table = table.DataTable({
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false,
+                }]
+            });
+        });
+
+    </script>
+}

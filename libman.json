@@ -1,0 +1,36 @@
+{
+  "version": "1.0",
+  "defaultProvider": "unpkg",
+  "libraries": [
+    {
+      "library": "@aspnet/signalr@1.1.4",
+      "destination": "wwwroot/lib/aspnet/signalr/",
+      "files": [
+        "dist/browser/signalr.js",
+        "dist/browser/signalr.js.map",
+        "dist/browser/signalr.min.js",
+        "dist/browser/signalr.min.js.map"
+      ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "datatables.net@1.10.23",
+      "destination": "wwwroot/lib/datatables.net/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "font-awesome@5.15.2",
+      "destination": "wwwroot/font-awesome/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "jqueryui@1.12.1",
+      "destination": "wwwroot/lib/jqueryui/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "bootbox.js@5.5.2",
+      "destination": "wwwroot/lib/bootbox.js/"
+    }
+  ]
+}

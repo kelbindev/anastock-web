@@ -1,0 +1,64 @@
+﻿@model ItemSalesReportViewModel
+    <div class="row col-md-12">
+        <div class="input-group date col-md-2">
+            <label class="col-md-12 col-form-label text-muted">Date From</label>
+            <input id="dateFrom" style="width:100%;" class="datepick col-md-12 form-control dateFrom" />
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+
+        <div class="input-group date col-md-2">
+            <label class="col-md-12 col-form-label text-muted">Date To</label>
+            <input id="dateTo" style="width:100%;" class="datepick col-md-12 form-control dateTo" />
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+
+        <div class="input-group date col-md-2">
+            <label class="col-md-12 col-form-label text-muted">Status</label>
+            <select id="Status" class="col-md-12 form-control">
+                <option label="All" value="0"></option>
+                <option label="New" value="New"></option>
+                <option label="Negotiate" value="Negotiate"></option>
+                <option label="Won" value="Won"></option>
+                <option label="Lose" value="Lose"></option>
+                <option label="Negotiate" value="Invoiced"></option>
+            </select>
+        </div>
+
+        <div class="input-group date col-md-2" style="float:left">
+            <label class="col-md-12 col-form-label text-right text-muted"></label>
+            <button class="btn btn-primary col-md-4" onclick="loadItemSalesReport()"><span class="fa fa-search" id="btnSearchSales"></span></button>
+        </div>
+    </div>
+
+    <br />
+    <hr />
+    <br />
+
+    <div>
+        <table id="tbSales" class="tbSales table table-responsive-sm table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UOM)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Qty)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Total)
+                    </th>
+                </tr>
+            </thead>
+
+          
+        </table>
+
+
+    </div>

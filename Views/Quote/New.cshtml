@@ -1,0 +1,222 @@
+﻿@model Anastock.Models.Quote
+@{
+    ViewData["Title"] = "New Quote";
+    ViewBag.reloadCustomer = "false";
+    ViewBag.reloadProject = "false";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Create Quote</strong>
+            </div>
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Customer" class="col-md-4 col-form-label text-left text-muted"></label>
+                            <select id="Customer" asp-for="Customer" class="customer form-control quoteCustomer"
+                                    asp-items="@(new SelectList(ViewBag.ListofCustomer, "CustomerId", "CustomerName"))" onchange="LoadBillingAddress(this); LoadProject(this);">
+                            </select>
+                            <span asp-validation-for="Customer" class="error text-danger">* Customer required</span>
+                        </div>
+                        <div class="form-group" id="BillingAddress">
+                            <input id="billAddrId" type="hidden" />
+                            <label id="billAddrHdr" class="col-md-8 col-form-label text-left text-muted"></label>
+                            <label id="billAddrVal" class="col-md-8 col-form-label text-left"></label>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Project" class="col-md-4 col-form-label text-left text-muted"></label>
+                            <select id="project" asp-for="Project" class="project form-control" onchange="onProjectChanged(this)"
+                                    asp-items="@(new SelectList(ViewBag.ListofProjects, "ProjectId", "Title"))">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label asp-for="QuoteNo" class="col-md-4 col-form-label text-right text-muted"></label>
+                            <input id="QuoteNo" asp-for="QuoteNo" class="col-md-8 form-control" value="@ViewBag.AutoNumber" placeholder="@ViewBag.AutoNumber" />
+                            <span asp-validation-for="QuoteNo" class="error text-danger offset-md-4 offset-lg-4 offset-sm-0">* Quote No required</span>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="CustomerPONo" class="col-md-4 col-form-label text-right text-muted"></label>
+                            <input id="CustomerPONo" asp-for="CustomerPONo" class="col-md-8 form-control" />
+                        </div>
+                        <div class="form-group row">
+                            <div class="input-group date" id="issueDate">
+                                <label asp-for="IssueDate" class="col-md-4 col-form-label text-right text-muted"></label>
+                                <input id="IssueDate" asp-for="IssueDate" style="width:100%;" value="@ViewBag.Date" class="issuedate col-md-8 form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                <span asp-validation-for="IssueDate" class="error text-danger offset-md-4 offset-lg-4 offset-sm-0">* Issue Date required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="input-group date" id="expiryDate">
+                                <label asp-for="ExpiryDate" class="col-md-4 col-form-label text-right text-muted small"></label>
+                                <input id="ExpiryDate" asp-for="ExpiryDate" style="width:100%;" class="expirydate col-md-8 form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                                <span asp-validation-for="ExpiryDate" class="error text-danger offset-md-4 offset-lg-4 offset-sm-0">* Expiry Date required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="Status" class="col-md-4 col-form-label text-right text-muted"></label>
+                            <select id="Status" asp-for="Status" class="col-md-8 form-control">
+                                <option label="New" value="New">New</option>
+                                <option label="Negotiate" value="Negotiate">Negotiate</option>
+                                <option label="Won" value="Won">Won</option>
+                                <option label="Lose" value="Lose">Lose</option>
+                            </select>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <input id="gstval" type="hidden" value="@ViewBag.GST" />
+                        <table class="table table-sm table-responsive-sm" style="width:100%;">
+                            <tr>
+                                <th class="text-sm-left text-muted text-black-50" style="width:17.5%;">Item</th>
+                                <th class="text-sm-left text-muted text-black-50" style="width:25%;">Description</th>
+                                <th class="text-sm-right text-muted text-black-50" style="width:7.5%;">Quantity</th>
+                                <th class="text-sm-left text-muted text-black-50" style="width:7.5%;">UOM</th>
+                                <th class="text-sm-right text-muted text-black-50" style="width:15%;">Unit Price</th>
+                                <th class="text-sm-right text-muted text-black-50" style="width:10%;">Discount (%)</th>
+                                <th class="text-sm-right text-muted text-black-50" style="width:15%;">Amount ($)</th>
+                                <th style="width:2.5%;">&nbsp;</th>
+                            </tr>
+                            <tr id="tablebody">
+                                <td>
+                                    <select id="productline" class="productline form-control" onchange="LoadProductData(this)">
+                                        <option>Select</option>
+                                    </select>
+                                    <span class="error">Select item</span>
+                                </td>
+                                <td>
+                                    <input type="text" id="descriptionline" class="descriptionline form-control" />
+                                </td>
+                                <td>
+                                    <input type="text" id="quantityline" value="0" class="quantityline form-control text-right" />
+                                    <span class="error">Quantity required</span>
+                                </td>
+                                <td>
+                                    <input type="text" id="uomline" class="uomline form-control" disabled="disabled" />
+                                    <span class="error">UOM required</span>
+                                </td>
+                                <td>
+                                    <input type="text" id="unitpriceline" value="0.00" class="unitpriceline form-control text-right" />
+                                    <span class="error">Unit price required</span>
+                                </td>
+                                <td>
+                                    <input type="text" id="discountline" value="0" class="discountline form-control text-right" />
+                                </td>
+                                <td>
+                                    <input type="text" id="amountline" value="0.00" class="amountline form-control text-right" />
+                                    <span class="error">Amount required</span>
+                                </td>
+                                <td style="text-align:center;">
+                                    @*<input type="button" id="add" style="width:40px;" class="btn btn-sm btn-info fa fa-plus-circle" />*@
+                                    <button id="addline" class="btn btn-sm btn-info">
+                                        <span id="falineIcon" class="fa fa-plus-circle"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                        <div id="orderItems">
+                            <table class="table table-responsive" id="orderdetailsItems"><tbody></tbody></table>
+                            <span id="orderItemError" style="color:red"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="CustomerNotes" class="col-md-12 col-form-label text-left text-muted"></label>
+                            <textarea id="CustomerNotes" asp-for="CustomerNotes" class="col-md-12 form-control" rows="3" maxlength="200"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row" style="margin-bottom:0px !important;">
+                            <label class="col-md-9 col-form-label text-right text-muted">Subtotal</label>
+                            <label id="subtotal" class="col-md-3 col-form-label text-right">$0.00</label>
+                        </div>
+                        <div class="form-group row" style="margin-bottom:0px !important;">
+                            <label asp-for="DiscountValue" class="col-form-label text-right text-muted col-md-5 m-1"></label>
+                            <select id="DiscountType" asp-for="DiscountType" class="form-control col-md-3 m-1" onchange="discountChange(this)">
+                                <option label="Select Type" value="0">Select Type</option>
+                                <option label="Percent (%)" value="Percent"></option>
+                                <option label="Value" value="Value"></option>
+                            </select>
+                            <input id="DiscountValue" asp-for="DiscountValue" class="form-control col-md-3 m-1 text-right" onchange="updateFinalAmounts()" />
+                            <div class="col-md-5"></div>
+                            <span asp-validation-for="DiscountValue" class="error text-danger text-right"></span>
+                        </div>
+                        <div class="form-group row totalDiscount" style="margin-bottom:0px !important;">
+                            <label class="col-md-9 col-form-label text-right text-muted ">Discount</label>
+                            <label id="discountTotal" class="col-md-3 col-form-label text-right">$0.00</label>
+                        </div>
+                        <div class="form-group row" style="margin-bottom:0px !important;">
+                            <label class="col-md-9 col-form-label text-right text-muted">GST</label>
+                            <label id="gst" class="col-md-3 col-form-label text-right"><label id="GST">@ViewBag.GST</label>%</label>
+                        </div>
+                        <div class="form-group row" style="margin-bottom:0px !important;">
+                            <input id="grandtotal" type="hidden" />
+                            <label class="col-md-9 col-form-label text-right text-muted">Total</label>
+                            <label id="total" class="col-md-3 col-form-label text-right">$0.00</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div style="padding:10px 0;" class="float-right">
+                            @*<input id="cancel" type="button" value="Cancel" class="btn btn-outline-dark btn-sm" style="width:70px;" />*@
+                            <a id="cancel" asp-controller="Quote" asp-action="Index" value="Cancel" class="btn btn-outline-dark btn-sm" style="width:70px;">Cancel</a>
+                            <input id="submit" type="button" value="Save" class="btn btn-success btn-sm" style="min-width:70px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*CREATE EDIT MODAL CUSTOMER*@
+<div aria-hidden="true" role="dialog" tabindex="-1" id="modalCreateEditCustomer" class="modal fade">
+    <div class="modal-dialog modal-lg" role="document" id="modalDialogCustomer">
+        @await Html.PartialAsync("~/Views/Customer/CreateEdit.cshtml", new CustomerViewModel());
+    </div>
+</div>
+
+@*CREATE EDIT MODAL PROJECT*@
+<div aria-hidden="true" role="dialog" tabindex="-1" id="modalCreateEditProject" class="modal fade">
+    <div class="modal-dialog modal-lg" role="document" id="modalDialogProject">
+        @await Html.PartialAsync("~/Views/Project/New.cshtml", new Project()));
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/quote.js"></script>
+    <script src="~/js/project.js"></script>
+    <script src="~/js/customer.js"></script>
+    <script>
+        var reloadCustomer = '@ViewBag.reloadCustomer';
+        var reloadProject = '@ViewBag.reloadProject';
+        var autoNumberProject;
+    </script>
+}
+<style>
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 90%;
+    }
+
+    tr.error {
+        background-color: rgba(255,0,0,0.35);
+    }
+</style>

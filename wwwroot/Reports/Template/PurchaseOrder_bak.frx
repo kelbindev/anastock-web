@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="02/22/2021 10:29:12" ReportInfo.Modified="02/25/2021 09:40:06" ReportInfo.CreatorVersion="2021.1.16.0">
+  <Dictionary>
+    <MsSqlDataConnection Name="AnastockDatabase" ConnectionString="rijcmlqAFHGp6KQj27H4qUwAIR20hSnyrpNtgmeY+I5zyTmYE0HuZfX1hs9fAqnt4DRtzHm0lx1VahQ7y62CpId+5L7TSgKvO/z2OK2LNUpQ3s4fNjBFB9hBhSDQSuVqyoEWOj+JA3fgqHaXh9yrGuwrjla0e780bEMGhLBCoC9P2Bdqtkhup7KSKmRgoCiMkZAUw83N2a7SNzUewWGPC3Lg23/fw==">
+      <TableDataSource Name="Table2" Alias="PurchaseOrders" DataType="System.Int32" Enabled="true" SelectCommand="SELECT po.*, c.Name AS CompanyName, c.GST/100 AS GST, c.Address AS CompanyAddress, c.Phone AS CompanyPhone, c.Fax AS CompanyFax, c.Website AS CompanyWebsite, c.Logo AS CompanyLogo, v.VendorName, ca.BillingAddress, ca.BillingContactPerson, ca.BillingCountry, ca.BillingPostalCode, ca.BillingState, ca.BillingTown, ca.BillingContactPhone1 FROM PurchaseOrders po INNER JOIN Company c ON po.CompanyId = c.CompanyId&#13;&#10;INNER JOIN Vendors v ON po.VendorId = v.VendorId INNER JOIN VendorAddresses ca ON po.VendorAddressId = ca.VendorAddressId WHERE po.Id = @poId">
+        <Column Name="Id" DataType="System.Guid"/>
+        <Column Name="PurchaseOrderNo" DataType="System.String"/>
+        <Column Name="VendorInvoiceNo" DataType="System.String"/>
+        <Column Name="IssueDate" DataType="System.DateTime"/>
+        <Column Name="DueDate" DataType="System.DateTime"/>
+        <Column Name="Status" DataType="System.String"/>
+        <Column Name="TaxInclusive" DataType="System.Boolean" BindableControl="CheckBox"/>
+        <Column Name="VendorNotes" DataType="System.String"/>
+        <Column Name="SubTotal" DataType="System.Decimal"/>
+        <Column Name="Tax" DataType="System.Decimal"/>
+        <Column Name="DiscountNote" DataType="System.String"/>
+        <Column Name="DiscountPercent" DataType="System.Decimal"/>
+        <Column Name="Total" DataType="System.Decimal"/>
+        <Column Name="RevisionNo" DataType="System.Int32"/>
+        <Column Name="CreditTerm" DataType="System.String"/>
+        <Column Name="ShippingTerm" DataType="System.String"/>
+        <Column Name="DeliveryTerm" DataType="System.String"/>
+        <Column Name="PaymentTerm" DataType="System.String"/>
+        <Column Name="isCurrentUse" DataType="System.Boolean" BindableControl="CheckBox"/>
+        <Column Name="VendorId" DataType="System.Guid"/>
+        <Column Name="VendorAddressId" DataType="System.Int32"/>
+        <Column Name="CreatedBy" DataType="System.String"/>
+        <Column Name="CreatedDate" DataType="System.DateTime"/>
+        <Column Name="UpdatedBy" DataType="System.String"/>
+        <Column Name="UpdatedDate" DataType="System.DateTime"/>
+        <Column Name="IsDeleted" DataType="System.Boolean" BindableControl="CheckBox"/>
+        <Column Name="CompanyId" DataType="System.Int32"/>
+        <Column Name="PaymentTermValue" DataType="System.Int32"/>
+        <Column Name="CompanyName" DataType="System.String"/>
+        <Column Name="GST" DataType="System.Decimal"/>
+        <Column Name="VendorName" DataType="System.String"/>
+        <Column Name="BillingAddress" DataType="System.String"/>
+        <Column Name="BillingContactPerson" DataType="System.String"/>
+        <Column Name="BillingCountry" DataType="System.String"/>
+        <Column Name="BillingPostalCode" DataType="System.String"/>
+        <Column Name="BillingState" DataType="System.String"/>
+        <Column Name="BillingTown" DataType="System.String"/>
+        <Column Name="BillingContactPhone1" DataType="System.String"/>
+        <Column Name="CompanyAddress" DataType="System.String"/>
+        <Column Name="CompanyPhone" DataType="System.String"/>
+        <Column Name="CompanyFax" DataType="System.String"/>
+        <Column Name="CompanyWebsite" DataType="System.String"/>
+        <Column Name="CompanyLogo" DataType="System.Byte[]" BindableControl="Picture"/>
+        <CommandParameter Name="poId" DataType="14" Expression="[poId]" DefaultValue="00000000-0000-0000-0000-000000000000"/>
+      </TableDataSource>
+      <TableDataSource Name="Table3" Alias="PurchaseOrderDetails" DataType="System.Int32" Enabled="true" SelectCommand="SELECT ROW_NUMBER() OVER (ORDER BY ps.Name ASC) AS No, ps.Name, pod.Description, pod.Qty, pod.UnitPrice, pod.DiscountPercent/100 AS DiscountPercent, pod.DiscountTotal, pod.UOM, pod.Total FROM PurchaseOrderDetails pod INNER JOIN ProductAndService ps ON pod.ProductAndServiceId = ps.Id&#13;&#10;WHERE pod.PurchaseOrderId = @poId">
+        <Column Name="No" DataType="System.Int64"/>
+        <Column Name="Name" DataType="System.String"/>
+        <Column Name="Description" DataType="System.String"/>
+        <Column Name="Qty" DataType="System.Decimal"/>
+        <Column Name="UnitPrice" DataType="System.Decimal"/>
+        <Column Name="DiscountPercent" DataType="System.Decimal"/>
+        <Column Name="DiscountTotal" DataType="System.Decimal"/>
+        <Column Name="UOM" DataType="System.String"/>
+        <Column Name="Total" DataType="System.Decimal"/>
+        <CommandParameter Name="poId" DataType="14" Expression="[poId]" DefaultValue="00000000-0000-0000-0000-000000000000"/>
+      </TableDataSource>
+    </MsSqlDataConnection>
+    <Parameter Name="poId" DataType="System.String" Expression="poId"/>
+    <Parameter Name="companyName" DataType="System.String" Expression="companyName"/>
+  </Dictionary>
+  <ReportPage Name="Page1" Watermark.Font="Arial, 60pt">
+    <PageHeaderBand Name="PageHeader1" Width="718.2" Height="85.05">
+      <TextObject Name="Text1" Left="481.95" Top="9.45" Width="217.35" Height="56.7" Text="Purchase Order" HorzAlign="Right" VertAlign="Center" Font="Calibri, 22pt" TextFill.Color="Blue"/>
+      <LineObject Name="Line1" Left="9.45" Top="85.05" Width="689.85" Diagonal="true"/>
+      <TextObject Name="Text64" Left="103.95" Top="9.45" Width="349.65" Height="56.7" Text="[companyName]" VertAlign="Center" Font="Calibri, 24pt" TextFill.Color="Blue"/>
+      <PictureObject Name="Picture1" Left="9.45" Top="9.45" Width="75.6" Height="56.7" DataColumn="PurchaseOrders.CompanyLogo"/>
+    </PageHeaderBand>
+    <DataBand Name="MasterData" Top="89.05" Width="718.2" Height="283.5">
+      <TextObject Name="Text3" Left="472.5" Top="18.9" Width="122.85" Height="18.9" Text="Date :" AllowExpressions="false" HorzAlign="Right" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text4" Left="472.5" Top="47.25" Width="122.85" Height="18.9" Text="PO No :" HorzAlign="Right" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text5" Left="472.5" Top="75.6" Width="122.85" Height="18.9" Text="Due Date :" HorzAlign="Right" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text10" Left="9.45" Top="132.3" Width="122.85" Height="18.9" Text="To :" AllowExpressions="false" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text18" Left="463.05" Top="132.3" Width="236.25" Height="18.9" Text="Prepared By :" AllowExpressions="false" HorzAlign="Right" Font="Arial, 10pt, style=Bold"/>
+      <TextObject Name="Text45" Left="604.8" Top="18.9" Width="94.5" Height="18.9" Text="[PurchaseOrders.IssueDate]" Format="Date" Format.Format="d" HorzAlign="Right" Font="Arial, 10pt"/>
+      <TextObject Name="Text46" Left="604.8" Top="47.25" Width="94.5" Height="18.9" Text="[PurchaseOrders.PurchaseOrderNo]" HorzAlign="Right" Font="Arial, 10pt"/>
+      <TextObject Name="Text47" Left="604.8" Top="75.6" Width="94.5" Height="18.9" Text="[PurchaseOrders.DueDate]" Format="Date" Format.Format="d" HorzAlign="Right" Font="Arial, 10pt"/>
+      <TextObject Name="Text48" Left="463.05" Top="160.65" Width="236.25" Height="18.9" Text="[PurchaseOrders.CompanyName]" HorzAlign="Right" Font="Arial, 10pt"/>
+      <TextObject Name="Text49" Left="9.45" Top="151.2" Width="217.35" Height="18.9" Text="[PurchaseOrders.BillingContactPerson]" Font="Arial, 10pt"/>
+      <TextObject Name="Text50" Left="9.45" Top="170.1" Width="217.35" Height="18.9" Text="[PurchaseOrders.VendorName]" Font="Arial, 10pt"/>
+      <TextObject Name="Text51" Left="9.45" Top="189" Width="217.35" Height="18.9" Text="[PurchaseOrders.BillingAddress]" Font="Arial, 10pt"/>
+      <TextObject Name="Text52" Left="9.45" Top="207.9" Width="217.35" Height="18.9" Text="[PurchaseOrders.BillingCountry]" Font="Arial, 10pt"/>
+      <TextObject Name="Text53" Left="9.45" Top="226.8" Width="217.35" Height="18.9" Text="[PurchaseOrders.BillingState]" Font="Arial, 10pt"/>
+      <TextObject Name="Text54" Left="9.45" Top="245.7" Width="217.35" Height="18.9" Text="[PurchaseOrders.BillingContactPhone1]" Font="Arial, 10pt"/>
+      <TextObject Name="Text65" Left="463.05" Top="179.55" Width="236.25" Height="18.9" Text="[PurchaseOrders.CompanyAddress]" HorzAlign="Right" Font="Arial, 10pt"/>
+      <TextObject Name="Text66" Left="463.05" Top="198.45" Width="236.25" Height="18.9" Text="[PurchaseOrders.CompanyPhone]" HorzAlign="Right" Font="Arial, 10pt"/>
+      <DataBand Name="Details" Top="399.45" Width="718.2" Height="18.9" DataSource="Table3">
+        <TextObject Name="Text56" Left="9.45" Width="160.65" Height="18.9" Border.Lines="All" Text="[PurchaseOrderDetails.Name]" Font="Calibri, 10pt"/>
+        <TextObject Name="Text57" Left="170.1" Width="179.55" Height="18.9" Border.Lines="All" Text="[PurchaseOrderDetails.Description]" Font="Calibri, 10pt"/>
+        <TextObject Name="Text58" Left="349.65" Width="66.15" Height="18.9" Border.Lines="All" Text="[PurchaseOrderDetails.Qty]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" WordWrap="false" Font="Calibri, 10pt" Trimming="EllipsisCharacter"/>
+        <TextObject Name="Text59" Left="415.8" Width="56.7" Height="18.9" Border.Lines="All" Text="[PurchaseOrderDetails.UOM]" Font="Calibri, 10pt"/>
+        <TextObject Name="Text60" Left="472.5" Width="75.6" Height="18.9" Border.Lines="All" Text="[PurchaseOrderDetails.UnitPrice]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" WordWrap="false" Font="Calibri, 10pt" Trimming="EllipsisCharacter"/>
+        <TextObject Name="Text61" Left="548.1" Width="66.15" Height="18.9" Border.Lines="All" Text="[PurchaseOrderDetails.DiscountPercent]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" WordWrap="false" Font="Calibri, 10pt" Trimming="EllipsisCharacter"/>
+        <TextObject Name="Text62" Left="614.25" Width="85.05" Height="18.9" Border.Lines="All" Text="[PurchaseOrderDetails.Total]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" WordWrap="false" Font="Calibri, 10pt" Trimming="EllipsisCharacter"/>
+        <DataHeaderBand Name="DataHeader1" Top="376.55" Width="718.2" Height="18.9">
+          <TextObject Name="Text20" Left="9.45" Width="160.65" Height="18.9" Border.Lines="All" Text="Items" VertAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TextObject Name="Text21" Left="170.1" Width="179.55" Height="18.9" Border.Lines="All" Text="Description" VertAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TextObject Name="Text22" Left="349.65" Width="66.15" Height="18.9" Border.Lines="All" Text="Quantity" HorzAlign="Right" VertAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TextObject Name="Text23" Left="472.5" Width="75.6" Height="18.9" Border.Lines="All" Text="Price" HorzAlign="Right" VertAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TextObject Name="Text24" Left="548.1" Width="66.15" Height="18.9" Border.Lines="All" Text="Discount" HorzAlign="Right" VertAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TextObject Name="Text25" Left="614.25" Width="85.05" Height="18.9" Border.Lines="All" Text="Total" HorzAlign="Right" VertAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TextObject Name="Text41" Left="415.8" Width="56.7" Height="18.9" Border.Lines="All" Text="UOM" VertAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+        </DataHeaderBand>
+        <DataFooterBand Name="DataFooter1" Top="422.35" Width="718.2" Height="170.1">
+          <TextObject Name="Text32" Left="472.5" Top="9.45" Width="141.75" Height="18.9" Text="Total" HorzAlign="Right" VertAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TextObject Name="Text43" Left="9.45" Top="66.15" Width="94.5" Height="18.9" Text="Notes : " VertAlign="Center" Font="Calibri, 10pt, style=Bold"/>
+          <TextObject Name="Text55" Left="9.45" Top="94.5" Width="444.15" Height="66.15" Text="[PurchaseOrders.VendorNotes]" Font="Arial, 10pt"/>
+          <TextObject Name="Text63" Left="614.25" Top="9.45" Width="85.05" Height="18.9" Border.Lines="All" Text="[PurchaseOrders.Total]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" WordWrap="false" Font="Calibri, 10pt" Trimming="EllipsisCharacter"/>
+        </DataFooterBand>
+      </DataBand>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="596.45" Width="718.2" Height="18.9">
+      <LineObject Name="Line2" Left="9.45" Width="689.85" Diagonal="true"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>

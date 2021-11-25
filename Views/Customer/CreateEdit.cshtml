@@ -1,0 +1,242 @@
+﻿@model CustomerViewModel;
+
+@{
+    Layout = null;
+    ViewBag.ModalTitle = String.IsNullOrEmpty(ViewBag.ModalTitle) ? "Create Customer" : ViewBag.ModalTitle;
+}
+
+<div class="modal-content" id="modalContent">
+    <form enctype="multipart/form-data" asp-controller="Customer" asp-action="CreateEdit" method="post"
+          id="formCreateCustomer" name="formCreateCustomer" onsubmit="SubmitFormCreateEdit(this); return false;">
+        <!--Modal Header Start-->
+        <!--Modal Header End-->
+        <div class="modal-header">
+            <h4 class="modal-title">@ViewBag.ModalTitle</h4>
+            <button type="button" class="close" onclick="hideCustomerModal()" aria-label="Close" ><span aria-hidden="true">×</span></button>
+        </div>
+        @*Customer INFO*@
+        <div id="accordion">
+            <div class="card mb-0">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" onclick="javascript: event.preventDefault()">
+                            Customer Information
+                        </button>
+                    </h5>
+                </div>
+
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                        @Html.HiddenFor(model => model.CustomerId)
+                        <input type="hidden" id="hdfCustomerId">
+
+                        <div class="form-group row">
+                            <label asp-for="CustomerName" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="CustomerName" class="form-control" placeholder="Name" id="tbCustomerName" >
+                                <span asp-validation-for="CustomerName" class="text-danger">Customer Name is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="CustomerEmail" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="CustomerEmail" class="form-control" placeholder="Email" id="tbCustomerEmail">
+                                <span asp-validation-for="CustomerEmail" class="text-danger">Customer Email is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="Description" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="Description" class="form-control" placeholder="Description" id="tbDescription">
+                                @*<span asp-validation-for="Description" class="text-danger"></span>*@
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="Website" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="Website" class="form-control" placeholder="Website" id="tbWebsite">
+                                @*<span asp-validation-for="Website" class="text-danger"></span>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*Customer ADDRESS*@
+            @*SHIPPING*@
+            <div class="card mb-0">
+                <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" onclick="javascript: event.preventDefault()">
+                            Shipping Address
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label asp-for="ShippingContactPerson" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="ShippingContactPerson" class="form-control" placeholder="Contact Person" id="tbShippingContactPerson" >
+                                <span asp-validation-for="ShippingContactPerson" class="text-danger">Contact Person is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="ShippingContactEmail" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="ShippingContactEmail" class="form-control" placeholder="Contact Email" id="tbShippingContactEmail" >
+                                <span asp-validation-for="ShippingContactEmail" class="text-danger">Contact Email is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="ShippingContactFax" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="ShippingContactFax" class="form-control" placeholder="Contact Fax" id="tbShippingContactFax" >
+                                <span asp-validation-for="ShippingContactFax" class="text-danger">Contact Fax is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="ShippingContactPhone1" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="ShippingContactPhone1" class="form-control" placeholder="Contact Phone" id="tbShippingContactPhone" >
+                                <span asp-validation-for="ShippingContactPhone1" class="text-danger">Contact Phone is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="ShippingCountry" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="ShippingCountry" class="form-control" placeholder="Shipping Country" id="tbShippingContactCountry" >
+                                <span asp-validation-for="ShippingCountry" class="text-danger">Shipping Country is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="ShippingAddress" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="ShippingAddress" class="form-control" placeholder="Address" id="tbShippingAddress" >
+                                <span asp-validation-for="ShippingAddress" class="text-danger">Shipping Address is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="ShippingTown" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="ShippingTown" class="form-control" placeholder="Town" id="tbShippingTown" >
+                                <span asp-validation-for="ShippingTown" class="text-danger">Shipping Town is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="ShippingState" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="ShippingState" class="form-control" placeholder="State" id="tbShippingState" >
+                                <span asp-validation-for="ShippingState" class="text-danger">Shipping State is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="ShippingPostalCode" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="ShippingPostalCode" class="form-control" placeholder="Postal Code" id="tbShippingPostalCode" >
+                                <span asp-validation-for="ShippingPostalCode" class="text-danger">Shipping Postal Code is Required</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            @*BILLING*@
+
+            <div class="card mb-0">
+                <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#CollapseThree" aria-expanded="false" onclick="javascript: event.preventDefault()">
+                            Billing Address
+                        </button>
+                        <button class="btn btn-sm btn-primary" id="btnCopyFromShipping" onclick="javascript: event.preventDefault();copyFromShipping()">Copy from Shipping Address</button>
+                    </h5>
+                </div>
+                <div id="CollapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label asp-for="BillingContactPerson" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="BillingContactPerson" class="form-control" placeholder="Contact Person" id="tbBillingContactPerson" >
+                                <span asp-validation-for="BillingContactPerson" class="text-danger">Contact Person is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="BillingContactEmail" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="BillingContactEmail" class="form-control" placeholder="Contact Email" id="tbBillingContactEmail" >
+                                <span asp-validation-for="BillingContactEmail" class="text-danger">Contact Email is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="BillingContactFax" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="BillingContactFax" class="form-control" placeholder="Contact Fax" id="tbBillingContactFax" >
+                                <span asp-validation-for="BillingContactFax" class="text-danger">Contact Fax is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="BillingContactPhone1" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="BillingContactPhone1" class="form-control" placeholder="Contact Phone" id="tbBillingContactPhone" >
+                                <span asp-validation-for="BillingContactPhone1" class="text-danger">Contact Phone is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="BillingCountry" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="BillingCountry" class="form-control" placeholder="Billing Country" id="tbBillingContactCountry" >
+                                <span asp-validation-for="BillingCountry" class="text-danger">Billing Country is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="BillingAddress" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="BillingAddress" class="form-control" placeholder="Address" id="tbBillingAddress" >
+                                <span asp-validation-for="BillingAddress" class="text-danger">Billing Address is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="BillingTown" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="BillingTown" class="form-control" placeholder="Town" id="tbBillingTown" >
+                                <span asp-validation-for="BillingTown" class="text-danger">Billing Town is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="BillingState" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="BillingState" class="form-control" placeholder="State" id="tbBillingState" >
+                                <span asp-validation-for="BillingState" class="text-danger">Billing State is Required</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="BillingPostalCode" class="col-sm-4 col-form-label"></label>
+                            <div class="col-sm-6">
+                                <input asp-for="BillingPostalCode" class="form-control" placeholder="Postal Code" id="tbBillingPostalCode" >
+                                <span asp-validation-for="BillingPostalCode" class="text-danger">Billing Postal Code is Required</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Modal Footer Start-->
+        <div class="modal-footer">
+            <button type="reset" id="cancel" class="btn btn-default" onclick="hideCustomerModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="btnSubmitCreate">@(String.IsNullOrEmpty(ViewBag.ButtonText)?"Create":ViewBag.ButtonText)</button>
+        </div>
+        <!--Modal Footer End-->
+    </form>
+</div>
+
+<style>
+    span.text-danger {
+        display:none;
+        color: red;
+        font-size: 90%;
+    }
+</style>
+

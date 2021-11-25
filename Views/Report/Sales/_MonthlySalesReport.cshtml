@@ -1,0 +1,49 @@
+﻿<div class="row col-md-12">
+    <div class="input-group date col-md-2">
+        <label class="col-md-12 col-form-label text-muted">Year</label>
+        <input id="yearMonthly" style="width:100%;" class="datepickYearly col-md-12 form-control dateFrom" />
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+    </div>
+
+    <div class="input-group date col-md-2" style="float:left">
+        <label class="col-md-12 col-form-label text-right text-muted"></label>
+        <button class="btn btn-primary col-md-4" onclick="loadSalesDetails()"><span class="fa fa-search" id="btnSearchSales"></span></button>
+    </div>
+</div>
+
+<br />
+<hr />
+<br />
+
+<div>
+    <table id="tbSalesMonthly" class="tbSales table table-responsive-sm table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="col-md-12">
+                <div class="card card-shadow">
+                    <div class="card-header">
+                        <strong>Our Sales</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="col-md-12">
+                            <div id="salesChartMonthly" style="width:100%;height:300px;">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

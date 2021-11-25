@@ -1,0 +1,89 @@
+﻿@model IEnumerable<Anastock.ViewModel.BillPaymentViewModel>
+
+@{
+    ViewData["Title"] = "Bill Payment";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Bill Payment</strong>
+            </div>
+            <div class="card-body">
+                <a class="btn btn-sm btn-primary float-right" asp-action="NewPayment">Create Bill Payment</a>
+                <br />
+                <br />
+
+
+                <table id="tbBill" class="tbBillPayment table table-responsive-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BillNo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PaymentDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PaymentName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ReferenceNo)
+                            </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.Description)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.AmountPaid)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.BillNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PaymentDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PaymentName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ReferenceNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.AmountPaid)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        var table = $('#tbBill');
+
+        $(document).ready(function () {
+            table = table.DataTable({
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false,
+                }]
+            });
+        });
+
+    </script>
+}

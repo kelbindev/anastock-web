@@ -1,0 +1,278 @@
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> userManager
+@inject AnastockContext context;
+@{
+    bool valid = true;
+    var users = userManager.GetUserAsync(User).GetAwaiter().GetResult();
+    if (users != null)
+    {
+        var companyId = users.CompanyId;
+        var company = context.Company.Where(c => c.CompanyId == companyId).FirstOrDefault();
+        if (company != null)
+        {
+            if (string.IsNullOrEmpty(company.Name))
+            {
+                valid = false;
+            }
+            if (string.IsNullOrEmpty(company.Address))
+            {
+                valid = false;
+            }
+            if (string.IsNullOrEmpty(company.Email))
+            {
+                valid = false;
+            }
+            if (string.IsNullOrEmpty(company.Phone))
+            {
+                valid = false;
+            }
+        }
+    }
+
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Anastock</title>
+    <link rel="stylesheet" href="~/css/site.min.css" />
+</head>
+<body>
+    <div class="wrapper d-flex align-items-stretch" id="wrapper">
+        <header></header>
+
+        <nav id="sidebar">
+            <div class="p-4 pt-5" style="text-align: center;">
+                <a class="logo" asp-controller="Dashboard" asp-action="Index">
+                    <img src="~/Images/anastock-logo.png"
+                         asp-append-version="true"
+                         class="logo-img" />
+                </a>
+                <ul class="list-unstyled components mb-5" id="sidebar-menu">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @if (!valid)
+                        {
+                            @if (!Context.Request.Path.Equals("/Company/Index"))
+                            {
+                                Context.Response.Redirect("/Company/Index");
+                            }
+                        }
+                        <li class="@Html.ActiveClass("Dashboard/Index")" asp-page="Dashboard/Index">
+                            <img src="~/Images/Dashboard-Icon.png" class="menu-item-image" />
+                            <a class="logo" asp-controller="Dashboard" asp-action="Index">DASHBOARD</a>
+                        </li>
+                        <li>
+                            <img src="~/Images/sales-icon.png" class="menu-item-image" />
+                            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">SALES</a>
+                            <ul class="collapse list-unstyled menu" id="homeSubmenu">
+                                <li class="@Html.ActiveClass("Project/Index")@Html.ActiveClass("Project/New")@Html.ActiveClass("Project/Edit")" asp-page="Project/Index">
+                                    <a asp-controller="Project" asp-action="Index">PROJECT</a>
+                                </li>
+                                <li class="@Html.ActiveClass("Quote/Index")@Html.ActiveClass("Quote/New")@Html.ActiveClass("Quote/Edit")" asp-page="Quote/Index">
+                                    <a asp-controller="Quote" asp-action="Index">QUOTE</a>
+                                </li>
+                                <li class="@Html.ActiveClass("Invoice/Index")@Html.ActiveClass("Invoice/New")@Html.ActiveClass("Invoice/Edit")" asp-page="Invoice/Index">
+                                    <a asp-controller="Invoice" asp-action="Index">INVOICE</a>
+                                </li>
+                                <li class="@Html.ActiveClass("InvoiceReceivable/Index")@Html.ActiveClass("InvoiceReceivable/New")" asp-page="InvoiceReceivable/Index">
+                                    <a asp-controller="InvoiceReceivable" asp-action="Index">INVOICE PAYMENT</a>
+                                </li>
+                                <li class="@Html.ActiveClass("Customer/Index")" asp-page="Customer/Index">
+                                    <a asp-controller="Customer" asp-action="Index">CUSTOMER</a>
+                                </li>
+                                <li class="@Html.ActiveClass("ProductAndService/Index")" asp-page="ProductAndService/Index">
+                                    <a asp-controller="ProductAndService" asp-action="Index">PRODUCT & SERVICE</a>
+                                </li>
+                                <li class="@Html.ActiveClass("PaymentMethod/Index")" asp-page="PaymentMethod/Index">
+                                    <a asp-controller="PaymentMethod" asp-action="Index">PAYMENT METHOD</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <img src="~/Images/purchase-icon.png" class="menu-item-image" />
+                            <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">PURCHASE</a>
+                            <ul class="collapse list-unstyled menu" id="pageSubmenu">
+                                <li class="@Html.ActiveClass("PurchaseOrder/Index")@Html.ActiveClass("PurchaseOrder/New")@Html.ActiveClass("PurchaseOrder/Edit")" asp-page="PurchaseOrder/Index">
+                                    <a asp-controller="PurchaseOrder" asp-action="Index">PURCHASE ORDER</a>
+                                </li>
+                                <li class="@Html.ActiveClass("Bill/Index")@Html.ActiveClass("Bill/New")@Html.ActiveClass("Bill/Edit")" asp-page="Bill/Index">
+                                    <a asp-controller="Bill" asp-action="Index">BILL</a>
+                                </li>
+                                <li class="@Html.ActiveClass("Bill/IndexPayment")@Html.ActiveClass("Bill/NewPayment")" asp-page="Bill/IndexPayment">
+                                    <a asp-controller="Bill" asp-action="IndexPayment">BILL PAYMENT</a>
+                                </li>
+                                <li class="@Html.ActiveClass("Vendor/Index")" asp-page="Vendor/Index">
+                                    <a asp-controller="Vendor" asp-action="Index">VENDOR</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="@Html.ActiveClass("ProductAndService/ProductBalance")" asp-page="ProductAndService/ProductBalance">
+                            <img src="~/Images/stocks-icon.png" class="menu-item-image" />
+                            <a asp-controller="ProductAndService" asp-action="ProductBalance">STOCKS</a>
+                        </li>
+                        <li class="@Html.ActiveClass("Report/Index")" asp-page="Report/Index">
+                            <img src="~/Images/reports-icons.png" class="menu-item-image" />
+                            <a asp-controller="Report" asp-action="Index">REPORTS</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a asp-controller="Account" asp-action="Login">LOGIN</a>
+                        </li>
+                        @*<li>
+                                <a asp-controller="Account" asp-action="Register">REGISTER</a>
+                            </li>*@
+                    }
+
+                </ul>
+
+                <div class="footer">
+                    <img src="~/Images/BC-logo2.png"
+                         asp-append-version="true"
+                         class="img-fluid" />
+                </div>
+
+            </div>
+        </nav>
+
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper" style="width:100%">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-0">
+                <div class="custom-menu">
+                    <button type="button" id="sidebarCollapse" class="btn btn-default">
+                        <i id="sidebarToggler" class="fa fa-bars"></i>
+                        <span class="sr-only">Toggle Menu</span>
+                    </button>
+                    <div class="form-group form-inline my-2 my-lg-0 float-right has-search ml-4">
+                        <span class="fa fa-search form-control-feedback" style="padding: 0px 10px;"></span>
+                        <input id="txSearch" type="text" class="form-control" placeholder="Search">
+                    </div>
+                    @*<div class="input-group form-inline my-2 my-lg-0 float-right has-search ml-4">
+                            <input type="text" class="form-control" placeholder="Search this blog">
+                            <div class="input-group-append">
+                                <button class="btn btn-secondary" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>*@
+                </div>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    //SEARCH BAR
+                    @*<div class="wrap">
+                            <div class="search">
+                                <input type="text" class="searchTerm" placeholder="Search...">
+                                <button type="submit" class="searchButton">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>*@
+                }
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="c-header-nav ml-auto mr-4">
+                            <li class="c-header-nav-item d-md-down-none mx-2">
+                                <a class="c-header-nav-link" href="#">
+                                    <span class="fa fa-bell">
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="c-header-nav-item d-md-down-none mx-2">
+                                <a class="c-header-nav-link" href="#">
+                                    <span class="fa fa-cog">
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="c-header-nav-item dropdown">
+                                <a class="c-header-nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <div class="c-avatar"><img class="c-avatar-img" src="~/Images/avatar-1.jpg"></div>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right pt-0">
+                                    <div class="dropdown-header bg-light py-2"><strong>Account</strong></div><a class="dropdown-item text-muted" href="#">
+                                        <span class="fa fa-user">
+                                        </span> Profile
+                                    </a>
+                                    <div class="dropdown-divider"></div><a class="dropdown-item text-muted" asp-action="Logout" asp-controller="Account">
+                                        <span class="fa fa-sign-out-alt">
+                                        </span> Logout
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                }
+            </nav>
+
+            <div class="container-fluid p-4 p-md-5 pt-5" id="content">
+                <main id="maincontent" role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script src="~/js/site.min.js" asp-append-version="true"></script>
+
+    <script>
+        $("#menu-toggle").click(function (e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+        $(document).ready(function () {
+            $('#sidebar-menu li').each(function () {
+                if ($(this).find('li.active').length !== 0) {
+                    var li = $(this).find('li.active').parent();
+                    var a = li.siblings('a');
+                    a.attr("aria-expanded", true);
+                    li.addClass('show');
+                    //console.log(a.attr('class'));
+                }
+            });
+        });
+
+        $("#txSearch").on('keyup', function (e) {
+            if (e.key === 'Enter' || e.keyCode === 13) {
+                window.location.href = '/Search/Result/' + $(this).val();
+            }
+        });
+    </script>
+    <style>
+        .has-search .form-control {
+            padding-left: 2.375rem;
+        }
+
+        .has-search .form-control-feedback {
+            position: absolute;
+            z-index: 2;
+            display: block;
+            width: 2.375rem;
+            height: 2.375rem;
+            line-height: 2.375rem;
+            text-align: center;
+            pointer-events: none;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+
+        #content {
+            height: 90vh;
+            overflow: auto;
+        }
+    </style>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
